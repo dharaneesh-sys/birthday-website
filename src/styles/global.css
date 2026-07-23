@@ -1,0 +1,25 @@
+:root {
+  --custom-cursor-size: 24px;
+  --cursor: auto;
+}
+
+.desktop,.app-view {
+  --cursor: none;
+}
+
+.custom-cursor {
+  position: fixed;
+  top: 0; left: 0;
+  width: var(--custom-cursor-size);
+  height: var(--custom-cursor-size);
+  background: radial-gradient(circle at center, var(--primary), var(--accent));
+  mix-blend-mode: screen;
+  pointer-events: none;
+  z-index: 9999;
+  transform: translate(-50%, -50%);
+  transition: transform 0.1s ease-out;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .custom-cursor { animation: none !important; }
+}

@@ -1,0 +1,278 @@
+/* ═══════════════════════════════════════════
+   Chapter 3 — Reasons You're Amazing
+   "Every reason I'm grateful for you"
+   Warm, premium glassmorphism grid
+   ═══════════════════════════════════════════ */
+
+/* ── Section ── */
+.ch3-section {
+  position: relative;
+  padding: 5rem 1.5rem 7rem;
+  background: var(--cream);
+  overflow: hidden;
+}
+
+/* ── Ambient glow behind heading ── */
+.ch3-glow {
+  position: absolute;
+  top: -10%;
+  left: 50%;
+  width: 600px;
+  height: 300px;
+  background: radial-gradient(
+    ellipse 50% 60% at 50% 50%,
+    rgba(200, 164, 107, 0.08) 0%,
+    transparent 70%
+  );
+  transform: translateX(-50%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* ── Heading ── */
+.ch3-heading-wrapper {
+  text-align: center;
+  margin-bottom: 4rem;
+  padding: 0 1rem;
+  position: relative;
+  z-index: 1;
+}
+
+.ch3-ornament {
+  display: block;
+  font-size: 1.5rem;
+  color: var(--gold);
+  opacity: 0.45;
+  margin-bottom: 0.5rem;
+  letter-spacing: 0.3em;
+}
+
+.ch3-heading {
+  font-family: 'Playfair Display', 'Cormorant Garamond', Georgia, serif;
+  font-size: clamp(2rem, 5vw, 3.2rem);
+  font-weight: 700;
+  color: var(--gold);
+  letter-spacing: 0.02em;
+  line-height: 1.15;
+  margin: 0 0 0.75rem;
+}
+
+.ch3-subtitle {
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-size: clamp(0.95rem, 1.5vw, 1.15rem);
+  font-style: italic;
+  color: var(--secondary);
+  letter-spacing: 0.03em;
+  max-width: 420px;
+  margin: 0 auto;
+}
+
+/* ── Grid ── */
+.ch3-grid {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.25rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+@media (min-width: 640px) {
+  .ch3-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.5rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .ch3-grid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.75rem;
+  }
+}
+
+/* ── Card ── */
+.ch3-card {
+  position: relative;
+  padding: 1.75rem 1.5rem;
+  border-radius: 1.25rem;
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.6) 0%,
+    rgba(255, 255, 255, 0.2) 100%
+  );
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(200, 164, 107, 0.12);
+  cursor: pointer;
+  transition:
+    transform 0.4s cubic-bezier(0.25, 0.1, 0.25, 1),
+    box-shadow 0.4s cubic-bezier(0.25, 0.1, 0.25, 1),
+    border-color 0.3s ease;
+  will-change: transform;
+  outline: none;
+  /* Prevent text selection on rapid click */
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.ch3-card:hover {
+  transform: translateY(-6px);
+  box-shadow:
+    0 16px 48px rgba(200, 164, 107, 0.2),
+    0 4px 16px rgba(200, 164, 107, 0.08);
+  border-color: rgba(200, 164, 107, 0.3);
+}
+
+.ch3-card:focus-visible {
+  outline: 2px solid var(--gold);
+  outline-offset: 4px;
+}
+
+.ch3-card--expanded {
+  box-shadow:
+    0 12px 40px rgba(200, 164, 107, 0.15),
+    0 2px 8px rgba(0, 0, 0, 0.04);
+  border-color: rgba(200, 164, 107, 0.25);
+}
+
+/* ── Number badge ── */
+.ch3-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.25rem;
+  height: 2.25rem;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--gold) 0%, var(--gold-light) 100%);
+  color: #fff;
+  font-family: 'Playfair Display', 'Cormorant Garamond', Georgia, serif;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  margin-bottom: 0.75rem;
+  line-height: 1;
+}
+
+/* ── Quality name ── */
+.ch3-name {
+  font-family: 'Playfair Display', 'Cormorant Garamond', Georgia, serif;
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: var(--text);
+  margin: 0 0 0.35rem;
+  line-height: 1.25;
+}
+
+/* ── Short description ── */
+.ch3-short {
+  font-size: 0.85rem;
+  font-weight: 400;
+  color: var(--secondary);
+  margin: 0;
+  line-height: 1.5;
+  letter-spacing: 0.01em;
+}
+
+/* ── Expanded content ── */
+.ch3-expanded {
+  overflow: hidden;
+}
+
+.ch3-divider {
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    rgba(200, 164, 107, 0.3) 0%,
+    rgba(200, 164, 107, 0.1) 100%
+  );
+  margin: 0.75rem 0;
+}
+
+.ch3-paragraph {
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-size: 0.95rem;
+  font-weight: 400;
+  font-style: italic;
+  line-height: 1.7;
+  color: #4a4a4a;
+  margin: 0;
+  letter-spacing: 0.02em;
+}
+
+/* ═══════════════════════════════════════════
+   Responsive
+   ═══════════════════════════════════════════ */
+
+@media (min-width: 640px) {
+  .ch3-section {
+    padding: 6rem 2rem 8rem;
+  }
+
+  .ch3-card {
+    padding: 2rem 1.75rem;
+    border-radius: 1.5rem;
+  }
+
+  .ch3-badge {
+    width: 2.5rem;
+    height: 2.5rem;
+    font-size: 0.8rem;
+  }
+
+  .ch3-name {
+    font-size: 1.3rem;
+  }
+
+  .ch3-paragraph {
+    font-size: 1rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .ch3-section {
+    padding: 7rem 2rem 10rem;
+  }
+
+  .ch3-heading-wrapper {
+    margin-bottom: 4.5rem;
+  }
+
+  .ch3-card {
+    padding: 2.25rem 2rem;
+  }
+
+  .ch3-name {
+    font-size: 1.35rem;
+  }
+
+  .ch3-glow {
+    width: 800px;
+    height: 400px;
+  }
+}
+
+/* ═══════════════════════════════════════════
+   Reduced Motion
+   ═══════════════════════════════════════════ */
+
+@media (prefers-reduced-motion: reduce) {
+  .ch3-card {
+    transition: none !important;
+  }
+
+  .ch3-card:hover {
+    transform: none !important;
+    box-shadow: none !important;
+    border-color: rgba(200, 164, 107, 0.12);
+  }
+
+  .ch3-glow {
+    opacity: 0;
+  }
+
+  .ch3-divider {
+    background: rgba(200, 164, 107, 0.25);
+  }
+}

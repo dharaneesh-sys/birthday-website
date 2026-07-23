@@ -1,0 +1,1 @@
+<!-- placeholder -- https://placeholder.com 640x480 red, 200x150 blue JPEG -->

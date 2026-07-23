@@ -1,0 +1,105 @@
+@import "tailwindcss";
+
+/* === Custom Design Tokens === */
+:root {
+  --cream: #F8F5EF;
+  --gold: #C8A46B;
+  --gold-light: #E0C99A;
+  --text: #2B2B2B;
+  --secondary: #6B6B6B;
+  --accent: #F4D6CC;
+}
+
+/* === Base === */
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background-color: var(--cream);
+  color: var(--text);
+  font-family: 'Inter', system-ui, sans-serif;
+  overflow-x: hidden;
+}
+
+/* === Typography === */
+h1, h2, h3, h4 {
+  font-family: 'Playfair Display', 'Cormorant Garamond', Georgia, serif;
+  font-weight: 600;
+}
+
+/* === Lenis smooth scroll === */
+html.lenis { scroll-behavior: auto; }
+.lenis.lenis-smooth { scroll-behavior: auto; }
+.lenis.lenis-smooth [data-lenis-prevent] { overscroll-behavior: contain; }
+.lenis.lenis-stopped { overflow: hidden; }
+
+/* === Custom Utilities === */
+.text-balance { text-wrap: balance; }
+
+/* === Responsive Touch Targets === */
+.touch-target {
+  min-width: 44px;
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* === Safe Area Padding === */
+.safe-padding {
+  padding-left: max(1rem, env(safe-area-inset-left));
+  padding-right: max(1rem, env(safe-area-inset-right));
+}
+
+/* === Clamp Font Scale === */
+.text-clamp-sm { font-size: clamp(0.75rem, 2.5vw, 0.875rem); }
+.text-clamp-base { font-size: clamp(0.875rem, 3vw, 1rem); }
+.text-clamp-lg { font-size: clamp(1rem, 4vw, 1.25rem); }
+.text-clamp-xl { font-size: clamp(1.25rem, 5vw, 1.5rem); }
+.text-clamp-2xl { font-size: clamp(1.5rem, 6vw, 2rem); }
+.text-clamp-3xl { font-size: clamp(1.75rem, 7vw, 2.5rem); }
+
+/* === Hide Scrollbar === */
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+.scrollbar-hide::-webkit-scrollbar { display: none; }
+
+/* === Mobile Container === */
+.mobile-container {
+  width: 100%;
+  max-width: 100vw;
+  overflow-x: hidden;
+  padding-left: clamp(0.75rem, 4vw, 1.5rem);
+  padding-right: clamp(0.75rem, 4vw, 1.5rem);
+}
+
+/* === Responsive Grid === */
+.grid-responsive {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr));
+  gap: clamp(1rem, 3vw, 2rem);
+}
+
+/* === Scroll Reveal === */
+.reveal {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+}
+.reveal.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* === Reduced Motion === */
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  .reveal { opacity: 1; transform: none; transition: none; }
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}

@@ -1,0 +1,523 @@
+/* ═══════════════════════════════════════════
+   Chapter 7 — Birthday Wishes
+   "If I could wish for anything for you..."
+   Warm, premium wish wall with glassmorphism
+   ═══════════════════════════════════════════ */
+
+/* ── Keyframes ── */
+@keyframes ch7-float {
+  0%, 100% {
+    transform: translateY(0) rotate(0deg);
+  }
+  25% {
+    transform: translateY(-6px) rotate(1deg);
+  }
+  50% {
+    transform: translateY(-3px) rotate(-1deg);
+  }
+  75% {
+    transform: translateY(-8px) rotate(0.5deg);
+  }
+}
+
+@keyframes ch7-sparkle-pulse {
+  0%, 100% {
+    opacity: 0.4;
+    filter: blur(0px);
+  }
+  50% {
+    opacity: 0.9;
+    filter: blur(1px);
+  }
+}
+
+@keyframes ch7-star-drift {
+  0% {
+    transform: translate(0, 0) scale(1);
+    opacity: 0;
+  }
+  10% {
+    opacity: 0.6;
+  }
+  85% {
+    opacity: 0.4;
+  }
+  100% {
+    transform: translate(var(--dx), var(--dy)) scale(0.4);
+    opacity: 0;
+  }
+}
+
+@keyframes ch7-glow-rotate {
+  from { transform: translate(-50%, -50%) rotate(0deg); }
+  to   { transform: translate(-50%, -50%) rotate(360deg); }
+}
+
+@keyframes ch7-warm-pulse {
+  0%, 100% {
+    opacity: 0.15;
+  }
+  50% {
+    opacity: 0.35;
+  }
+}
+
+/* ── Section ── */
+.ch7-section {
+  position: relative;
+  padding: 5rem 1.5rem 7rem;
+  background: linear-gradient(
+    180deg,
+    #FDF6EE 0%,
+    #FCF1E5 20%,
+    #F8EDE0 45%,
+    #F5E8D8 70%,
+    #F3E4D0 100%
+  );
+  overflow: hidden;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* Warm radial glow layers */
+.ch7-section::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 60% 35% at 50% 0%, rgba(200, 164, 107, 0.1) 0%, transparent 70%),
+    radial-gradient(ellipse 55% 40% at 80% 100%, rgba(244, 214, 204, 0.12) 0%, transparent 60%),
+    radial-gradient(ellipse 40% 30% at 15% 50%, rgba(200, 164, 107, 0.06) 0%, transparent 55%),
+    radial-gradient(circle 25% at 50% 40%, rgba(255, 215, 150, 0.08) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+/* ── Floating background stars ── */
+.ch7-bg-stars {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  overflow: hidden;
+  z-index: 0;
+}
+
+.ch7-bg-star {
+  position: absolute;
+  width: 4px;
+  height: 4px;
+  background: var(--gold);
+  border-radius: 50%;
+  opacity: 0;
+  animation: ch7-star-drift 8s ease-in-out infinite;
+}
+
+/* ── Heading ── */
+.ch7-heading-wrapper {
+  text-align: center;
+  margin-bottom: 4rem;
+  position: relative;
+  z-index: 1;
+}
+
+.ch7-ornament {
+  display: block;
+  font-size: 1.6rem;
+  color: var(--gold);
+  opacity: 0.35;
+  margin-bottom: 0.5rem;
+  letter-spacing: 0.4em;
+  line-height: 1;
+}
+
+.ch7-heading {
+  font-family: 'Playfair Display', 'Cormorant Garamond', Georgia, serif;
+  font-size: clamp(2rem, 5.5vw, 3.4rem);
+  font-weight: 700;
+  color: var(--gold);
+  letter-spacing: 0.02em;
+  line-height: 1.12;
+  margin: 0 0 0.75rem;
+}
+
+.ch7-heading-sub {
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-size: clamp(0.95rem, 1.5vw, 1.2rem);
+  font-style: italic;
+  color: var(--secondary);
+  letter-spacing: 0.03em;
+  max-width: 460px;
+  margin: 0 auto;
+}
+
+/* ── Wishes Grid ── */
+.ch7-grid {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.25rem;
+  max-width: 1200px;
+  width: 100%;
+  margin: 0 auto;
+}
+
+@media (min-width: 640px) {
+  .ch7-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.5rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .ch7-grid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.75rem;
+  }
+}
+
+/* ── Wish Card ── */
+.ch7-card {
+  position: relative;
+  padding: 2rem 1.5rem 1.75rem;
+  border-radius: 1.25rem;
+  background: linear-gradient(
+    145deg,
+    rgba(255, 255, 255, 0.65) 0%,
+    rgba(255, 255, 255, 0.25) 100%
+  );
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  border: 1px solid rgba(200, 164, 107, 0.12);
+  box-shadow:
+    0 4px 24px rgba(200, 164, 107, 0.06),
+    0 1px 4px rgba(0, 0, 0, 0.02);
+  transition:
+    transform 0.4s cubic-bezier(0.25, 0.1, 0.25, 1),
+    box-shadow 0.4s cubic-bezier(0.25, 0.1, 0.25, 1),
+    border-color 0.3s ease;
+  will-change: transform;
+  outline: none;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+/* Card hover: lift + glow */
+.ch7-card:hover {
+  transform: translateY(-6px);
+  box-shadow:
+    0 16px 48px rgba(200, 164, 107, 0.18),
+    0 4px 16px rgba(200, 164, 107, 0.08),
+    0 0 60px rgba(200, 164, 107, 0.04);
+  border-color: rgba(200, 164, 107, 0.28);
+}
+
+.ch7-card:focus-visible {
+  outline: 2px solid var(--gold);
+  outline-offset: 4px;
+}
+
+/* ── Gold Corner Ornaments ── */
+
+/* Top-left corner ornament */
+.ch7-card::before {
+  content: '';
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  width: 18px;
+  height: 18px;
+  border-top: 2px solid rgba(200, 164, 107, 0.3);
+  border-left: 2px solid rgba(200, 164, 107, 0.3);
+  border-radius: 2px 0 0 0;
+  pointer-events: none;
+  transition: border-color 0.35s ease;
+}
+
+.ch7-card:hover::before {
+  border-top-color: rgba(200, 164, 107, 0.55);
+  border-left-color: rgba(200, 164, 107, 0.55);
+}
+
+/* Top-right corner ornament */
+.ch7-card::after {
+  content: '';
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  width: 18px;
+  height: 18px;
+  border-top: 2px solid rgba(200, 164, 107, 0.3);
+  border-right: 2px solid rgba(200, 164, 107, 0.3);
+  border-radius: 0 2px 0 0;
+  pointer-events: none;
+  transition: border-color 0.35s ease;
+}
+
+.ch7-card:hover::after {
+  border-top-color: rgba(200, 164, 107, 0.55);
+  border-right-color: rgba(200, 164, 107, 0.55);
+}
+
+/* ── Decorative inner corner accents (bottom corners) ── */
+.ch7-card-inner-ornament {
+  position: absolute;
+  bottom: 10px;
+  left: 10px;
+  width: 18px;
+  height: 18px;
+  border-bottom: 1.5px solid rgba(200, 164, 107, 0.18);
+  border-left: 1.5px solid rgba(200, 164, 107, 0.18);
+  border-radius: 0 0 0 2px;
+  pointer-events: none;
+  transition: border-color 0.35s ease;
+}
+
+.ch7-card-inner-ornament--right {
+  left: auto;
+  right: 10px;
+  border-left: none;
+  border-right: 1.5px solid rgba(200, 164, 107, 0.18);
+  border-radius: 0 0 2px 0;
+}
+
+.ch7-card:hover .ch7-card-inner-ornament {
+  border-bottom-color: rgba(200, 164, 107, 0.4);
+  border-left-color: rgba(200, 164, 107, 0.4);
+}
+
+.ch7-card:hover .ch7-card-inner-ornament--right {
+  border-right-color: rgba(200, 164, 107, 0.4);
+}
+
+/* ── Star icon floating above card ── */
+.ch7-star-icon {
+  position: absolute;
+  top: -14px;
+  right: -8px;
+  color: var(--gold);
+  opacity: 0.35;
+  font-size: 0.85rem;
+  pointer-events: none;
+  animation: ch7-float 4s ease-in-out infinite;
+  transition: opacity 0.3s ease;
+}
+
+.ch7-card:hover .ch7-star-icon {
+  opacity: 0.65;
+}
+
+.ch7-star-icon--left {
+  right: auto;
+  left: -8px;
+  top: auto;
+  bottom: -10px;
+  font-size: 0.7rem;
+  animation-delay: -2s;
+  opacity: 0.25;
+}
+
+.ch7-card:hover .ch7-star-icon--left {
+  opacity: 0.5;
+}
+
+/* ── Card content ── */
+.ch7-wish-number {
+  font-family: 'Playfair Display', 'Cormorant Garamond', Georgia, serif;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--gold);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  margin-bottom: 0.4rem;
+  opacity: 0.45;
+  line-height: 1;
+}
+
+.ch7-wish-text {
+  font-family: 'Cormorant Garamond', 'Playfair Display', Georgia, serif;
+  font-size: clamp(1.05rem, 1.8vw, 1.25rem);
+  font-weight: 500;
+  font-style: italic;
+  color: var(--text);
+  line-height: 1.55;
+  margin: 0 0 0.9rem;
+  max-width: 300px;
+  letter-spacing: 0.01em;
+}
+
+/* ── Decorative line below text ── */
+.ch7-divider-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  width: 100%;
+}
+
+.ch7-divider-line {
+  height: 1px;
+  flex: 0 1 60px;
+  max-width: 80px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(200, 164, 107, 0.25) 30%,
+    rgba(200, 164, 107, 0.25) 70%,
+    transparent
+  );
+  transition: flex-basis 0.4s ease;
+}
+
+.ch7-card:hover .ch7-divider-line {
+  flex-basis: 80px;
+}
+
+.ch7-divider-dot {
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: var(--gold);
+  opacity: 0.3;
+  flex-shrink: 0;
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.ch7-card:hover .ch7-divider-dot {
+  opacity: 0.55;
+  transform: scale(1.25);
+}
+
+/* ═══════════════════════════════════════════
+   Responsive
+   ═══════════════════════════════════════════ */
+
+@media (min-width: 640px) {
+  .ch7-section {
+    padding: 6rem 2rem 8rem;
+  }
+
+  .ch7-card {
+    padding: 2.25rem 1.75rem 2rem;
+    border-radius: 1.5rem;
+  }
+
+  .ch7-card::before,
+  .ch7-card::after {
+    width: 22px;
+    height: 22px;
+    top: 12px;
+  }
+
+  .ch7-card-inner-ornament {
+    width: 22px;
+    height: 22px;
+    bottom: 12px;
+  }
+
+  .ch7-wish-text {
+    font-size: clamp(1.1rem, 1.8vw, 1.3rem);
+  }
+}
+
+@media (min-width: 1024px) {
+  .ch7-section {
+    padding: 7rem 2rem 10rem;
+  }
+
+  .ch7-heading-wrapper {
+    margin-bottom: 4.5rem;
+  }
+
+  .ch7-card {
+    padding: 2.5rem 2rem 2.25rem;
+  }
+
+  .ch7-card::before,
+  .ch7-card::after {
+    width: 24px;
+    height: 24px;
+    top: 14px;
+    left: 14px;
+  }
+
+  .ch7-card::after {
+    left: auto;
+    right: 14px;
+  }
+
+  .ch7-card-inner-ornament {
+    width: 24px;
+    height: 24px;
+    bottom: 14px;
+    left: 14px;
+  }
+
+  .ch7-card-inner-ornament--right {
+    left: auto;
+    right: 14px;
+  }
+
+  .ch7-star-icon {
+    font-size: 1rem;
+    top: -16px;
+    right: -10px;
+  }
+
+  .ch7-star-icon--left {
+    font-size: 0.8rem;
+    bottom: -12px;
+    left: -10px;
+  }
+}
+
+/* ═══════════════════════════════════════════
+   Reduced Motion
+   ═══════════════════════════════════════════ */
+
+@media (prefers-reduced-motion: reduce) {
+  .ch7-card {
+    transition: none !important;
+  }
+
+  .ch7-card:hover {
+    transform: none !important;
+    box-shadow:
+      0 4px 24px rgba(200, 164, 107, 0.06),
+      0 1px 4px rgba(0, 0, 0, 0.02);
+    border-color: rgba(200, 164, 107, 0.12);
+  }
+
+  .ch7-card::before,
+  .ch7-card::after,
+  .ch7-card-inner-ornament {
+    transition: none !important;
+  }
+
+  .ch7-star-icon {
+    animation: none;
+  }
+
+  .ch7-star-icon--left {
+    animation: none;
+  }
+
+  .ch7-divider-line {
+    transition: none;
+  }
+
+  .ch7-divider-dot {
+    transition: none;
+  }
+
+  .ch7-bg-star {
+    display: none;
+  }
+
+  .ch7-section::before {
+    opacity: 0.12;
+  }
+}
