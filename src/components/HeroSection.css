@@ -1,1 +1,169 @@
-// DEPRECATED — Old desktop-OS styles. All styling migrated to CSS modules and Tailwind in src/components/chapters/, src/components/landing/, src/components/final/ etc.
+/* ============================================================
+   HeroSection — Minimal Fullscreen Hero (Single-Scroll)
+   ============================================================ */
+
+/* --- Container --- */
+.hero-section {
+  position: relative;
+  width: 100%;
+  min-height: 100vh;
+  overflow: hidden;
+  background: var(--bg, #F6F1E8);
+}
+
+/* --- Background Image (Ken Burns zoom) --- */
+.hero-section__bg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  will-change: transform;
+  animation: heroKenBurns 10s ease-out forwards;
+}
+
+@keyframes heroKenBurns {
+  from { transform: scale(1); }
+  to   { transform: scale(1.08); }
+}
+
+/* --- Gradient overlay (transparent → cream for text readability) --- */
+.hero-section__overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    180deg,
+    transparent 0%,
+    transparent 45%,
+    color-mix(in srgb, var(--bg, #F6F1E8) 15%, transparent) 60%,
+    color-mix(in srgb, var(--bg, #F6F1E8) 55%, transparent) 75%,
+    color-mix(in srgb, var(--bg, #F6F1E8) 90%, transparent) 92%,
+    var(--bg, #F6F1E8) 100%
+  );
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* --- Fallback gradient if image fails --- */
+.hero-section__fallback {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    135deg,
+    #2B2B2B 0%,
+    #4A3F35 40%,
+    #5C4E3E 100%
+  );
+  z-index: 0;
+}
+
+/* --- Content layer --- */
+.hero-section__content {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  align-items: flex-start;
+  width: 100%;
+  min-height: 100vh;
+  padding: clamp(1.5rem, 5vw, 3rem);
+  pointer-events: none;
+}
+
+/* --- Title text: "Ibhi · 19" --- */
+.hero-section__title {
+  font-family: 'Playfair Display', 'Cormorant Garamond', Georgia, serif;
+  font-size: clamp(2.5rem, 8vw, 5rem);
+  font-weight: 700;
+  line-height: 1.1;
+  color: var(--gold, #B08D57);
+  margin: 0;
+  text-shadow: 0 2px 16px rgba(0, 0, 0, 0.25);
+  letter-spacing: 0.04em;
+  pointer-events: auto;
+}
+
+/* --- Scroll-down indicator --- */
+.hero-section__scroll {
+  position: absolute;
+  bottom: clamp(1rem, 3vh, 2rem);
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 3;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.35rem;
+  color: var(--secondary, #6B6B6B);
+  opacity: 0.7;
+  pointer-events: none;
+}
+
+.hero-section__scroll-label {
+  font-family: 'Inter', system-ui, sans-serif;
+  font-size: clamp(0.6rem, 1.2vw, 0.75rem);
+  font-weight: 400;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: inherit;
+}
+
+.hero-section__scroll-chevron {
+  width: clamp(16px, 2.5vw, 24px);
+  height: clamp(16px, 2.5vw, 24px);
+  stroke-width: 1.5;
+  stroke: currentColor;
+  fill: none;
+  animation: heroBounce 2s ease-in-out infinite;
+}
+
+@keyframes heroBounce {
+  0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+  40% { transform: translateY(6px); }
+  60% { transform: translateY(3px); }
+}
+
+/* --- Image Loading Transition --- */
+.hero-section__bg--loading {
+  opacity: 0;
+  transition: opacity 0.6s ease;
+}
+
+.hero-section__bg--loaded {
+  opacity: 1;
+  transition: opacity 0.6s ease;
+}
+
+/* --- Reduced Motion --- */
+@media (prefers-reduced-motion: reduce) {
+  .hero-section__bg {
+    animation: none;
+    transform: scale(1);
+  }
+
+  .hero-section__scroll-chevron {
+    animation: none;
+    transform: translateY(0);
+  }
+
+  .hero-section__bg--loading,
+  .hero-section__bg--loaded {
+    transition: none;
+  }
+}
+
+/* --- Small screens: less drastic gradient --- */
+@media (max-width: 480px) {
+  .hero-section__overlay {
+    background: linear-gradient(
+      180deg,
+      transparent 0%,
+      transparent 35%,
+      color-mix(in srgb, var(--bg, #F6F1E8) 25%, transparent) 50%,
+      color-mix(in srgb, var(--bg, #F6F1E8) 65%, transparent) 70%,
+      color-mix(in srgb, var(--bg, #F6F1E8) 90%, transparent) 88%,
+      var(--bg, #F6F1E8) 100%
+    );
+  }
+}

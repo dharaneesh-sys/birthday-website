@@ -1,13 +1,16 @@
 @import "tailwindcss";
 
-/* === Custom Design Tokens === */
+/* === Candlelight Design Tokens === */
 :root {
-  --cream: #F8F5EF;
-  --gold: #C8A46B;
-  --gold-light: #E0C99A;
-  --text: #2B2B2B;
-  --secondary: #6B6B6B;
-  --accent: #F4D6CC;
+  --bg: #F6F1E8;
+  --card: #FFFFFF;
+  --sand: #E7D7C1;
+  --warm-gray: #C7B8A6;
+  --text: #2E2A27;
+  --gold: #B08D57;
+  --text-light: #8A7E6E;
+  --accent: #F0E8D8;
+  --shadow: rgba(46,42,39,0.08);
 }
 
 /* === Base === */
@@ -16,7 +19,7 @@ html {
 }
 
 body {
-  background-color: var(--cream);
+  background-color: var(--bg);
   color: var(--text);
   font-family: 'Inter', system-ui, sans-serif;
   overflow-x: hidden;
@@ -24,7 +27,7 @@ body {
 
 /* === Typography === */
 h1, h2, h3, h4 {
-  font-family: 'Playfair Display', 'Cormorant Garamond', Georgia, serif;
+  font-family: 'Playfair Display', Georgia, serif;
   font-weight: 600;
 }
 
@@ -36,52 +39,6 @@ html.lenis { scroll-behavior: auto; }
 
 /* === Custom Utilities === */
 .text-balance { text-wrap: balance; }
-
-/* === Responsive Touch Targets === */
-.touch-target {
-  min-width: 44px;
-  min-height: 44px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-/* === Safe Area Padding === */
-.safe-padding {
-  padding-left: max(1rem, env(safe-area-inset-left));
-  padding-right: max(1rem, env(safe-area-inset-right));
-}
-
-/* === Clamp Font Scale === */
-.text-clamp-sm { font-size: clamp(0.75rem, 2.5vw, 0.875rem); }
-.text-clamp-base { font-size: clamp(0.875rem, 3vw, 1rem); }
-.text-clamp-lg { font-size: clamp(1rem, 4vw, 1.25rem); }
-.text-clamp-xl { font-size: clamp(1.25rem, 5vw, 1.5rem); }
-.text-clamp-2xl { font-size: clamp(1.5rem, 6vw, 2rem); }
-.text-clamp-3xl { font-size: clamp(1.75rem, 7vw, 2.5rem); }
-
-/* === Hide Scrollbar === */
-.scrollbar-hide {
-  -ms-overflow-style: none;
-  scrollbar-width: none;
-}
-.scrollbar-hide::-webkit-scrollbar { display: none; }
-
-/* === Mobile Container === */
-.mobile-container {
-  width: 100%;
-  max-width: 100vw;
-  overflow-x: hidden;
-  padding-left: clamp(0.75rem, 4vw, 1.5rem);
-  padding-right: clamp(0.75rem, 4vw, 1.5rem);
-}
-
-/* === Responsive Grid === */
-.grid-responsive {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr));
-  gap: clamp(1rem, 3vw, 2rem);
-}
 
 /* === Scroll Reveal === */
 .reveal {

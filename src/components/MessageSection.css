@@ -1,1 +1,97 @@
-// DEPRECATED — Old desktop-OS styles. All styling migrated to CSS modules and Tailwind in src/components/chapters/, src/components/landing/, src/components/final/ etc.
+/* ============================================================
+   MessageSection — Heartfelt Birthday Letter Card
+   Uses design tokens from index.css (--bg, --card, --gold, --text, --shadow, etc.)
+   Scroll-reveal via .reveal / .visible pattern (defined in index.css)
+   ============================================================ */
+
+/* ── Section Root ── */
+.message-section {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+}
+
+/* ── Letter Card ── */
+.message-section__card {
+  max-width: 650px;
+  width: 100%;
+  background: var(--card);
+  border-radius: 16px;
+  padding: 4rem 3.5rem;
+  box-shadow: 0 8px 32px var(--shadow);
+  text-align: center;
+}
+
+/* ── Gold Ornament Dividers ── */
+.message-section__ornament {
+  width: 60px;
+  height: 2px;
+  background-color: var(--gold);
+  margin: 0 auto;
+  opacity: 0.5;
+}
+
+.message-section__ornament:first-child {
+  margin-bottom: 2rem;
+}
+
+.message-section__ornament:last-child {
+  margin-top: 2.5rem;
+}
+
+/* ── Heading "For Ibhi" ── */
+.message-section__heading {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: clamp(2rem, 5vw, 2.8rem);
+  font-weight: 700;
+  color: var(--gold);
+  margin: 0 0 1.5rem;
+  letter-spacing: 0.04em;
+  line-height: 1.2;
+}
+
+/* ── Message Body ── */
+.message-section__text {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: 1.125rem;
+  line-height: 1.8;
+  color: var(--text);
+  margin: 0;
+  text-align: left;
+  text-wrap: pretty;
+}
+
+/* ── Drop Cap ── */
+.message-section__text::first-letter {
+  font-size: 3.2em;
+  font-weight: 700;
+  float: left;
+  line-height: 0.85;
+  margin-right: 0.12em;
+  margin-top: 0.08em;
+  color: var(--gold);
+  font-family: 'Playfair Display', Georgia, serif;
+}
+
+/* ── Responsive: Medium / Small ── */
+@media (max-width: 640px) {
+  .message-section__card {
+    padding: 2.5rem 1.5rem;
+    border-radius: 12px;
+  }
+
+  .message-section__text {
+    font-size: 1rem;
+  }
+
+  .message-section__heading {
+    font-size: 1.75rem;
+  }
+}
+
+@media (max-width: 400px) {
+  .message-section__card {
+    padding: 2rem 1.25rem;
+  }
+}

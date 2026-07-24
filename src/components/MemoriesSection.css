@@ -1,1 +1,158 @@
-// DEPRECATED — Old desktop-OS styles. All styling migrated to CSS modules and Tailwind in src/components/chapters/, src/components/landing/, src/components/final/ etc.
+/* ============================================================
+   MemoriesSection — Masonry Photo Gallery (Warm, Elegant)
+   ============================================================ */
+
+/* --- Section wrapper --- */
+.memories-section {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 4rem 1.5rem;
+  background: var(--bg, #F6F1E8);
+}
+
+/* --- Header --- */
+.memories-section__header {
+  text-align: center;
+  margin-bottom: 3rem;
+}
+
+.memories-section__title {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: clamp(2rem, 5vw, 3rem);
+  font-weight: 700;
+  color: var(--gold, #B08D57);
+  margin: 0 0 0.75rem;
+  letter-spacing: 0.02em;
+}
+
+.memories-section__subtitle {
+  font-family: 'Inter', system-ui, sans-serif;
+  font-size: 1.05rem;
+  font-style: italic;
+  color: var(--text-light, #8A7E6E);
+  margin: 0;
+}
+
+/* --- Masonry grid (CSS columns) --- */
+.memories-section__grid {
+  column-count: 3;
+  column-gap: 1.25rem;
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+/* --- Photo card --- */
+.memories-card {
+  break-inside: avoid;
+  margin-bottom: 1.25rem;
+  background: var(--card, #FFFFFF);
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 2px 12px var(--shadow, rgba(46, 42, 39, 0.08));
+  transition:
+    transform 0.4s ease,
+    box-shadow 0.4s ease;
+  cursor: default;
+}
+
+.memories-card:hover {
+  transform: scale(1.02);
+  box-shadow: 0 8px 28px rgba(46, 42, 39, 0.12);
+}
+
+/* --- Image wrapper --- */
+.memories-card__image-wrapper {
+  overflow: hidden;
+  line-height: 0;
+}
+
+.memories-card__image {
+  width: 100%;
+  height: auto;
+  display: block;
+  transition: transform 0.5s ease;
+}
+
+.memories-card:hover .memories-card__image {
+  transform: scale(1.05);
+}
+
+/* --- Caption --- */
+.memories-card__caption {
+  padding: 0.85rem 1rem 0.9rem;
+  font-family: 'Inter', system-ui, sans-serif;
+  font-size: 0.85rem;
+  font-weight: 400;
+  color: var(--text-light, #8A7E6E);
+  letter-spacing: 0.03em;
+  line-height: 1.4;
+}
+
+/* --- Scroll-reveal stagger delays --- */
+.memories-card.reveal:nth-child(1) { transition-delay: 0ms; }
+.memories-card.reveal:nth-child(2) { transition-delay: 100ms; }
+.memories-card.reveal:nth-child(3) { transition-delay: 200ms; }
+.memories-card.reveal:nth-child(4) { transition-delay: 300ms; }
+.memories-card.reveal:nth-child(5) { transition-delay: 400ms; }
+.memories-card.reveal:nth-child(6) { transition-delay: 500ms; }
+
+/* --- Responsive: Tablet (2 columns) --- */
+@media (max-width: 1024px) {
+  .memories-section {
+    padding: 3.5rem 1.25rem;
+  }
+
+  .memories-section__grid {
+    column-count: 2;
+    column-gap: 1rem;
+  }
+
+  .memories-card {
+    margin-bottom: 1rem;
+  }
+}
+
+/* --- Responsive: Mobile (1 column) --- */
+@media (max-width: 640px) {
+  .memories-section {
+    padding: 2.5rem 1rem;
+  }
+
+  .memories-section__header {
+    margin-bottom: 2rem;
+  }
+
+  .memories-section__grid {
+    column-count: 1;
+    column-gap: 0;
+  }
+
+  .memories-card {
+    margin-bottom: 1rem;
+  }
+
+  .memories-card__caption {
+    padding: 0.7rem 0.85rem 0.75rem;
+    font-size: 0.8rem;
+  }
+}
+
+/* --- Reduced Motion --- */
+@media (prefers-reduced-motion: reduce) {
+  .memories-card {
+    transition: none;
+  }
+
+  .memories-card:hover {
+    transform: none;
+  }
+
+  .memories-card__image {
+    transition: none;
+  }
+
+  .memories-card:hover .memories-card__image {
+    transform: none;
+  }
+}
