@@ -1,4 +1,5 @@
 import { useEffect, useRef } from 'react';
+import { createPortal } from 'react-dom';
 
 /* ─── Types ──────────────────────────────────────────── */
 type BurstLevel = 'tiny' | 'micro' | 'small' | 'celebration';
@@ -141,7 +142,9 @@ export default function ConfettiBurst({
     return () => cancelAnimationFrame(animRef.current);
   }, [level, originX, originY, onComplete]);
 
-  return (
+  /* Portal the canvas to document.body so it escapes any
+     will-change:transform / transform containing block. */
+  return createPortal(
     <canvas
       ref={canvasRef}
       style={{
@@ -153,6 +156,7 @@ export default function ConfettiBurst({
         zIndex: 9999,
       }}
       aria-hidden="true"
-    />
+    />,
+    document.body,
   );
 }

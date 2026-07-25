@@ -1,6 +1,7 @@
 import HeroSection from './components/HeroSection';
 import MemoriesSection from './components/MemoriesSection';
 import NineteenPortal from './components/NineteenPortal';
+import HappyBirthday from './components/HappyBirthday';
 import MusicPlayer from './components/MusicPlayer';
 import Playground from './components/Playground';
 import MessageSection from './components/MessageSection';
@@ -24,6 +25,7 @@ function App() {
       <HeroSection />
       <MemoriesSection />
       <NineteenPortal />
+      <HappyBirthday />
       <MusicPlayer />
       <Playground />
       <MessageSection />

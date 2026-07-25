@@ -1,0 +1,227 @@
+/* ============================================================
+   HappyBirthday — Golden Glowing Interlude
+   A single, luminous moment between the portal and the music.
+   Golden text glows, sparkles drift, scroll breathes life.
+   ============================================================ */
+
+.hb {
+  position: relative;
+  width: 100%;
+  min-height: 60vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  background: var(--bg, #F5F0E5);
+  padding: 4rem 1.5rem;
+}
+
+/* Seamless gradient from NineteenPortal's --bg-letter into --bg */
+.hb::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 100px;
+  background: linear-gradient(180deg, var(--bg-letter, #F0EBE0) 0%, transparent 100%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* Seamless gradient into MusicPlayer at bottom */
+.hb::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 80px;
+  background: linear-gradient(0deg, var(--bg, #F5F0E5) 0%, transparent 100%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* ─── Inner container ────────────────────────────────── */
+.hb__inner {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  text-align: center;
+}
+
+/* ─── Background glow — golden radial, breathes ──────── */
+.hb__glow {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: clamp(300px, 50vw, 600px);
+  height: clamp(300px, 50vw, 600px);
+  border-radius: 50%;
+  background: radial-gradient(
+    circle,
+    rgba(200, 164, 107, 0.18) 0%,
+    rgba(200, 164, 107, 0.08) 30%,
+    rgba(200, 164, 107, 0.03) 55%,
+    transparent 75%
+  );
+  pointer-events: none;
+  z-index: 0;
+  will-change: transform, opacity;
+}
+
+/* ─── Decorative divider ─────────────────────────────── */
+.hb__divider {
+  width: 3rem;
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    var(--gold, #C8A46B),
+    transparent
+  );
+  margin: 0.75rem 0;
+  opacity: 0.5;
+}
+
+/* ─── Typography ─────────────────────────────────────── */
+.hb__line {
+  margin: 0;
+  line-height: 1.2;
+}
+
+/* "Happy Birthday" — elegant serif */
+.hb__line--main {
+  font-family: 'Inter', system-ui, sans-serif;
+  font-size: clamp(0.65rem, 1.4vw, 0.8rem);
+  font-weight: 400;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: var(--text-light, #8A7E6E);
+  margin-bottom: 0.3rem;
+}
+
+/* "Ibhi" — the hero name, golden glow */
+.hb__line--name {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: clamp(3rem, 10vw, 6rem);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: var(--gold, #C8A46B);
+  text-shadow:
+    0 0 40px rgba(200, 164, 107, 0.3),
+    0 0 80px rgba(200, 164, 107, 0.15),
+    0 0 120px rgba(200, 164, 107, 0.08);
+  animation: hbGlowPulse 4s ease-in-out infinite alternate;
+}
+
+@keyframes hbGlowPulse {
+  0% {
+    text-shadow:
+      0 0 40px rgba(200, 164, 107, 0.3),
+      0 0 80px rgba(200, 164, 107, 0.15),
+      0 0 120px rgba(200, 164, 107, 0.08);
+  }
+  100% {
+    text-shadow:
+      0 0 50px rgba(200, 164, 107, 0.4),
+      0 0 100px rgba(200, 164, 107, 0.2),
+      0 0 150px rgba(200, 164, 107, 0.12);
+  }
+}
+
+/* "19" — subtle, secondary */
+.hb__line--age {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: clamp(1.5rem, 4vw, 2.5rem);
+  font-weight: 400;
+  font-style: italic;
+  color: var(--gold-light, #E0C99A);
+  opacity: 0.6;
+  letter-spacing: 0.1em;
+  margin-top: -0.25rem;
+}
+
+/* Tagline — cursive, whispered */
+.hb__line--tag {
+  font-family: 'Caveat', cursive;
+  font-size: clamp(0.9rem, 2vw, 1.15rem);
+  font-weight: 400;
+  color: var(--text-light, #8A7E6E);
+  margin-top: 0.5rem;
+  letter-spacing: 0.02em;
+}
+
+/* ════════════════════════════════════════════════════════════
+   SPARKLES — drifting golden dots
+   ════════════════════════════════════════════════════════════ */
+
+.hb__sparkles {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 1;
+  overflow: hidden;
+}
+
+.hb__sparkle {
+  position: absolute;
+  border-radius: 50%;
+  background: radial-gradient(
+    circle,
+    var(--gold-light, #E0C99A) 0%,
+    var(--gold, #C8A46B) 60%,
+    transparent 100%
+  );
+  opacity: 0;
+  animation: hbSparkleFloat 3s ease-in-out infinite;
+}
+
+@keyframes hbSparkleFloat {
+  0% {
+    opacity: 0;
+    transform: translateY(0) translateX(0) scale(0.3);
+  }
+  20% {
+    opacity: 0.8;
+    transform: translateY(-8px) translateX(var(--drift, 5px)) scale(1);
+  }
+  80% {
+    opacity: 0.6;
+    transform: translateY(-20px) translateX(calc(var(--drift, 5px) * -0.5)) scale(0.8);
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-30px) translateX(var(--drift, 5px)) scale(0.2);
+  }
+}
+
+/* ════════════════════════════════════════════════════════════
+   REDUCED MOTION
+   ════════════════════════════════════════════════════════════ */
+
+@media (prefers-reduced-motion: reduce) {
+  .hb__sparkle {
+    animation: none;
+    opacity: 0.3;
+  }
+
+  .hb__line--name {
+    animation: none;
+  }
+}
+
+/* ════════════════════════════════════════════════════════════
+   MOBILE
+   ════════════════════════════════════════════════════════════ */
+
+@media (max-width: 640px) {
+  .hb {
+    min-height: 50vh;
+    padding: 3rem 1rem;
+  }
+}
