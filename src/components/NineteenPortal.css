@@ -1,0 +1,153 @@
+/* ============================================================
+   NineteenPortal — Signature 19 transition
+   ============================================================ */
+
+.nineteen-portal {
+  position: relative;
+  width: 100%;
+  height: 120vh;
+  background: var(--bg-letter, #F0EBE0);
+}
+
+/* Textured paper grain — like handmade stationery */
+.nineteen-portal::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image:
+    radial-gradient(circle at 35% 25%, rgba(180, 150, 100, 0.03) 0%, transparent 40%),
+    radial-gradient(circle at 65% 75%, rgba(180, 150, 100, 0.02) 0%, transparent 40%),
+    radial-gradient(circle at 50% 50%, rgba(200, 164, 107, 0.015) 0%, transparent 60%);
+  pointer-events: none;
+}
+
+/* Entrance mask — radial clip-path portal opening */
+.nineteen-portal__entrance {
+  position: absolute;
+  inset: 0;
+  will-change: clip-path;
+}
+
+.nineteen-portal__sticky {
+  position: sticky;
+  top: 0;
+  width: 100%;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+/* ─── "19" text ──────────────────────────────────────── */
+.nineteen-portal__text-wrap {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0;
+  z-index: 2;
+}
+
+.nineteen-portal__char {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-weight: 700;
+  line-height: 1;
+  background: linear-gradient(135deg, var(--gold, #C8A46B), #ffffff);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  will-change: transform, font-size, opacity;
+}
+
+/* ─── Background watermark ───────────────────────────── */
+.nineteen-portal__watermark {
+  position: fixed;
+  bottom: 1rem;
+  right: 1.5rem;
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: 5rem;
+  font-weight: 700;
+  color: var(--gold, #C8A46B);
+  pointer-events: none;
+  z-index: 0;
+  line-height: 1;
+  user-select: none;
+}
+
+/* ─── Wax seal with XIX ──────────────────────────────── */
+.nineteen-portal__seal {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  background: radial-gradient(
+    circle at 40% 35%,
+    var(--gold-light, #E0C99A) 0%,
+    var(--gold, #C8A46B) 50%,
+    var(--gold-dark, #A8884D) 100%
+  );
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 3;
+  box-shadow:
+    0 2px 8px rgba(0, 0, 0, 0.15),
+    inset 0 1px 2px rgba(255, 255, 255, 0.3),
+    inset 0 -1px 2px rgba(0, 0, 0, 0.1);
+  border: 1.5px solid rgba(255, 255, 255, 0.2);
+}
+
+.nineteen-portal__seal-text {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: 1.1rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  color: #fff;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.15);
+  user-select: none;
+}
+
+/* ─── Orbiting particles ─────────────────────────────── */
+.portal-particles {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.portal-particle {
+  position: absolute;
+  width: 3px;
+  height: 3px;
+  background: var(--gold, #C8A46B);
+  border-radius: 50%;
+  opacity: 0.5;
+  transform: rotate(var(--angle, 0deg)) translateX(var(--radius, 60px));
+}
+
+@keyframes portalOrbit {
+  0% { transform: rotate(0deg) translateX(var(--radius, 60px)); }
+  100% { transform: rotate(360deg) translateX(var(--radius, 60px)); }
+}
+
+/* ─── Reduced motion ─────────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  .portal-particle {
+    animation: none !important;
+    opacity: 0.2;
+  }
+
+  .nineteen-portal__char {
+    font-size: 20vw !important;
+  }
+
+  .nineteen-portal__entrance {
+    clip-path: none !important;
+  }
+}

@@ -2,15 +2,56 @@
 
 /* === Candlelight Design Tokens === */
 :root {
+  /* ── Colors ── */
   --bg: #F6F1E8;
   --card: #FFFFFF;
   --sand: #E7D7C1;
   --warm-gray: #C7B8A6;
   --text: #2E2A27;
-  --gold: #B08D57;
+  --gold: #C8A46B;
+  --gold-light: #E0C99A;
+  --gold-dark: #A8884D;
+  --sparkle-gold: rgba(200,164,107,0.6);
   --text-light: #8A7E6E;
   --accent: #F0E8D8;
   --shadow: rgba(46,42,39,0.08);
+
+  /* ── Section backgrounds — subtle rhythm ── */
+  --bg-hero: #FAFAF5;
+  --bg-gallery: #F5F0E6;
+  --bg-letter: #F0EBE0;
+  --bg-music: #EDE7DA;
+  --bg-playground: #F2EDE2;
+  --bg-wish: #FAFAF8;
+  --bg-footer: #ECE6D9;
+
+  /* ── Easing curves ── */
+  --ease-out-expo: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+
+  /* ── Timing ── */
+  --duration-fast: 0.15s;
+  --duration-normal: 0.25s;
+  --duration-slow: 0.4s;
+
+  /* ── Shadows ── */
+  --shadow-sm: 0 1px 3px rgba(0,0,0,0.04), 0 4px 12px rgba(0,0,0,0.03);
+  --shadow-md: 0 2px 8px rgba(0,0,0,0.06), 0 8px 24px rgba(0,0,0,0.04);
+  --shadow-lg: 0 4px 16px rgba(0,0,0,0.08), 0 16px 48px rgba(0,0,0,0.05);
+  --shadow-xl: 0 8px 32px rgba(0,0,0,0.1), 0 24px 64px rgba(0,0,0,0.06);
+
+  /* ── Border radius ── */
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  --radius-xl: 16px;
+  --radius-full: 9999px;
+
+  /* ── Section spacing ── */
+  --section-padding-y: 4rem;
+  --section-padding-x: 1.5rem;
+  --section-padding-y-mobile: 3rem;
+  --section-padding-x-mobile: 1rem;
 }
 
 /* === Base === */
@@ -35,6 +76,7 @@ h1, h2, h3, h4 {
 .text-balance { text-wrap: balance; }
 
 /* === Scroll Reveal === */
+/* DEPRECATED — kept for legacy compatibility */
 .reveal {
   opacity: 0;
   transform: translateY(30px);
@@ -43,6 +85,23 @@ h1, h2, h3, h4 {
 .reveal.visible {
   opacity: 1;
   transform: translateY(0);
+}
+
+/* === Film Grain Overlay === */
+body::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: 9998;
+  pointer-events: none;
+  opacity: 0.035;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+  background-repeat: repeat;
+  background-size: 256px 256px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  body::after { opacity: 0.015; }
 }
 
 /* === Reduced Motion === */
