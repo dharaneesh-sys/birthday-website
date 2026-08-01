@@ -1,5 +1,5 @@
 import { useState, useRef, useCallback, useEffect } from 'react';
-import { motion, useInView, useAnimation } from 'framer-motion';
+import { motion, useInView, useAnimation, type Variants } from 'framer-motion';
 import './MusicPlayer.css';
 
 const AUDIO_SRC =
@@ -41,6 +41,42 @@ function ElapsedCounter({ currentTime, isPlaying }: { currentTime: number; isPla
   return <span className="vinyl__elapsed">{display}</span>;
 }
 
+const headingVariants: Variants = {
+  hidden: { opacity: 0, x: -30 },
+  visible: { opacity: 1, x: 0, transition: { duration: 0.5, ease: [0.22, 1, 0.36, 1], delay: 0.1 } },
+};
+
+const vinylVariants: Variants = {
+  hidden: { opacity: 0, y: -60, scale: 0.9 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    scale: 1,
+    transition: {
+      type: 'spring' as const,
+      stiffness: 100,
+      damping: 14,
+      mass: 0.8,
+      delay: 0.25,
+    },
+  },
+};
+
+const infoVariants: Variants = {
+  hidden: { opacity: 0, y: 20 },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.5, ease: [0.22, 1, 0.36, 1], delay: 0.5 } },
+};
+
+const progressVariants: Variants = {
+  hidden: { opacity: 0, scaleX: 0.8, transformOrigin: 'left' },
+  visible: { opacity: 1, scaleX: 1, transition: { duration: 0.6, ease: [0.22, 1, 0.36, 1], delay: 0.6 } },
+};
+
+const buttonVariants: Variants = {
+  hidden: { opacity: 0, scale: 0.5 },
+  visible: { opacity: 1, scale: 1, transition: { type: 'spring' as const, stiffness: 200, damping: 12, delay: 0.75 } },
+};
+
 export default function MusicPlayer() {
   const audioRef = useRef<HTMLAudioElement>(null);
   const [isPlaying, setIsPlaying] = useState(false);
@@ -48,6 +84,7 @@ export default function MusicPlayer() {
   const [duration, setDuration] = useState(0);
   const [error, setError] = useState<string | null>(null);
   const sectionRef = useRef<HTMLElement>(null);
+  const labelRef = useRef<HTMLDivElement>(null);
   const isInView = useInView(sectionRef, { once: true, margin: '-80px' });
   const vinylControls = useAnimation();
 
@@ -74,16 +111,15 @@ export default function MusicPlayer() {
 
   /* Reset label rotation when stopped */
   useEffect(() => {
-    if (!isPlaying) {
-      rotationRef.current = 0;
-      /* Smoothly ease back to 0 */
-      const el = document.querySelector('.vinyl__label') as HTMLElement | null;
-      if (el) {
-        el.style.transition = 'transform 1s cubic-bezier(0.22, 1, 0.36, 1)';
-        el.style.transform = 'translate(-50%, -50%) rotate(0deg)';
-        setTimeout(() => { el.style.transition = ''; }, 1000);
-      }
-    }
+    if (isPlaying) return;
+    rotationRef.current = 0;
+    /* Smoothly ease back to 0 */
+    const el = labelRef.current;
+    if (!el) return;
+    el.style.transition = 'transform 1s cubic-bezier(0.22, 1, 0.36, 1)';
+    el.style.transform = 'translate(-50%, -50%) rotate(0deg)';
+    const timer = setTimeout(() => { el.style.transition = ''; }, 1000);
+    return () => clearTimeout(timer);
   }, [isPlaying]);
 
   const togglePlay = useCallback(() => {
@@ -140,43 +176,6 @@ export default function MusicPlayer() {
   }, [togglePlay]);
 
   const progress = duration > 0 ? (currentTime / duration) * 100 : 0;
-
-  /* ── Variants ── */
-  const headingVariants = {
-    hidden: { opacity: 0, x: -30 },
-    visible: { opacity: 1, x: 0, transition: { duration: 0.5, ease: [0.22, 1, 0.36, 1], delay: 0.1 } },
-  };
-
-  const vinylVariants = {
-    hidden: { opacity: 0, y: -60, scale: 0.9 },
-    visible: {
-      opacity: 1,
-      y: 0,
-      scale: 1,
-      transition: {
-        type: 'spring' as const,
-        stiffness: 100,
-        damping: 14,
-        mass: 0.8,
-        delay: 0.25,
-      },
-    },
-  };
-
-  const infoVariants = {
-    hidden: { opacity: 0, y: 20 },
-    visible: { opacity: 1, y: 0, transition: { duration: 0.5, ease: [0.22, 1, 0.36, 1], delay: 0.5 } },
-  };
-
-  const progressVariants = {
-    hidden: { opacity: 0, scaleX: 0.8, transformOrigin: 'left' },
-    visible: { opacity: 1, scaleX: 1, transition: { duration: 0.6, ease: [0.22, 1, 0.36, 1], delay: 0.6 } },
-  };
-
-  const buttonVariants = {
-    hidden: { opacity: 0, scale: 0.5 },
-    visible: { opacity: 1, scale: 1, transition: { type: 'spring' as const, stiffness: 200, damping: 12, delay: 0.75 } },
-  };
 
   return (
     <section className="music-player" ref={sectionRef} aria-label="Music player" data-cursor-label="">
@@ -239,6 +238,7 @@ export default function MusicPlayer() {
                 <div className="vinyl__grooves" />
                 {/* Center label — counter-rotates to stay readable */}
                 <div
+                  ref={labelRef}
                   className="vinyl__label"
                   style={{ transform: `translate(-50%, -50%) rotate(${labelRotation}deg)` }}
                 >

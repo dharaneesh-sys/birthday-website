@@ -5,17 +5,54 @@ import './FiveFrames.css';
 
 /* ─── Photo data ─────────────────────────────────────── */
 const PHOTO_FILES = [
-  'IMG20250506144456.jpg',
-  'IMG_20250510_152025_341.jpg',
-  'IMG_20250510_152113_459.jpg',
-  'IMG_20250510_152120_608.jpg',
-  'IMG_20250510_152134_431.jpg',
+  { file: 'IMG20250506144456.jpg', width: 1500, height: 1125, variants: [480, 960, 1080, 1440] },
+  { file: 'IMG_20250510_152025_341.jpg', width: 816, height: 612, variants: [480, 816] },
+  { file: 'IMG_20250510_152113_459.jpg', width: 816, height: 612, variants: [480, 816] },
+  { file: 'IMG_20250510_152120_608.jpg', width: 816, height: 612, variants: [480, 816] },
+  { file: 'IMG_20250510_152134_431.jpg', width: 1500, height: 1125, variants: [480, 960, 1080, 1440] },
 ];
 
-const PHOTOS = PHOTO_FILES.map((file) => ({
-  src: `/images/memories/${file}`,
-  alt: '',
-}));
+const PHOTOS = PHOTO_FILES.map(({ file, width, height, variants }) => {
+  const base = `/images/memories/${file.replace(/\.jpg$/, '')}`;
+  return {
+    src: `${base}.jpg`,
+    srcSet: variants.map((w) => `${base}-${w}w.avif ${w}w`).join(', '),
+    width,
+    height,
+    alt: '',
+  };
+});
+
+/* ─── Responsive AVIF image (JPEG fallback) ──────────── */
+function FrameImage({
+  photo,
+  sizes,
+  className = '',
+  style,
+  draggable,
+}: {
+  photo: (typeof PHOTOS)[number];
+  sizes: string;
+  className?: string;
+  style?: React.CSSProperties;
+  draggable?: boolean;
+}) {
+  return (
+    <picture>
+      <source type="image/avif" srcSet={photo.srcSet} sizes={sizes} />
+      <img
+        src={photo.src}
+        alt={photo.alt}
+        className={className}
+        style={style}
+        draggable={draggable}
+        loading="lazy"
+        width={photo.width}
+        height={photo.height}
+      />
+    </picture>
+  );
+}
 
 /* ─── Frame metadata (editorial captions) ────────────── */
 const FRAMES = [
@@ -40,9 +77,9 @@ function FrameCaption({
 }) {
   return (
     <div className={`five-frame__caption ${className}`}>
-      <span className="five-frame__caption-num">{num}</span>
+      <span className="five-frame__caption-num">{num}</span>{' '}
       <span className="five-frame__caption-divider" />
-      <span className="five-frame__caption-title">{title}</span>
+      <span className="five-frame__caption-title">{title}</span>{' '}
       <span className="five-frame__caption-subtitle">{subtitle}</span>
     </div>
   );
@@ -69,13 +106,11 @@ function FrameSection({
    FRAME 01 — FULL-BLEED CINEMATIC
    ═══════════════════════════════════════════════════════ */
 function FrameCinematic({
-  src,
-  alt,
+  photo,
   scrollYProgress,
   onClick,
 }: {
-  src: string;
-  alt: string;
+  photo: (typeof PHOTOS)[number];
   scrollYProgress: MotionValue<number>;
   onClick: () => void;
 }) {
@@ -89,20 +124,37 @@ function FrameCinematic({
 
   return (
     <FrameSection className="five-frame--cinematic">
-      <motion.div className="five-frame__bar five-frame__bar--top" style={{ height: barHeight }} />
-      <motion.div className="five-frame__bar five-frame__bar--bottom" style={{ height: barHeight }} />
+      <motion.div
+        className="five-frame__bar five-frame__bar--top"
+        style={{ height: barHeight }}
+      />
+      <motion.div
+        className="five-frame__bar five-frame__bar--bottom"
+        style={{ height: barHeight }}
+      />
 
-      <div className="five-frame__cinematic-frame" onClick={onClick} data-cursor-label="VIEW">
-        <motion.img
-          src={src}
-          alt={alt}
-          className="five-frame__img five-frame__img--cinematic"
-          style={{ scale: imgScale }}
-          loading="lazy"
-        />
+      <button
+        type="button"
+        className="five-frame__cinematic-frame"
+        onClick={onClick}
+        data-cursor-label="VIEW"
+        aria-label="Open Cinematic photo"
+      >
+        <picture>
+          <source type="image/avif" srcSet={photo.srcSet} sizes="100vw" />
+          <motion.img
+            src={photo.src}
+            alt={photo.alt}
+            className="five-frame__img five-frame__img--cinematic"
+            style={{ scale: imgScale }}
+            loading="lazy"
+            width={photo.width}
+            height={photo.height}
+          />
+        </picture>
         <motion.div className="five-frame__cinematic-vignette" style={{ opacity: vignetteOpacity }} />
         <motion.div className="five-frame__cinematic-border" style={{ opacity: borderOpacity }} />
-      </div>
+      </button>
 
       <motion.div
         className="five-frame__caption-wrap five-frame__caption-wrap--light"
@@ -118,13 +170,11 @@ function FrameCinematic({
    FRAME 02 — EDITORIAL BOOK SPREAD
    ═══════════════════════════════════════════════════════ */
 function FrameEditorial({
-  src,
-  alt,
+  photo,
   scrollYProgress,
   onClick,
 }: {
-  src: string;
-  alt: string;
+  photo: (typeof PHOTOS)[number];
   scrollYProgress: MotionValue<number>;
   onClick: () => void;
 }) {
@@ -138,34 +188,26 @@ function FrameEditorial({
 
   return (
     <FrameSection className="five-frame--editorial">
-      <div className="five-frame__spread" onClick={onClick} data-cursor-label="VIEW">
+      <button
+        type="button"
+        className="five-frame__spread"
+        onClick={onClick}
+        data-cursor-label="VIEW"
+        aria-label="Open Editorial photo"
+      >
         <motion.div className="five-frame__spread-page five-frame__spread-page--left" style={{ x: leftX }}>
           <div className="five-frame__spread-img-wrap">
-            <img
-              src={src}
-              alt={alt}
-              className="five-frame__img five-frame__img--spread"
-              style={{ objectPosition: '0% 50%' }}
-              draggable={false}
-              loading="lazy"
-            />
+            <FrameImage photo={photo} sizes="50vw" className="five-frame__img five-frame__img--spread" style={{ objectPosition: '0% 50%' }} draggable={false} />
           </div>
         </motion.div>
         <motion.div className="five-frame__spread-page five-frame__spread-page--right" style={{ x: rightX }}>
           <div className="five-frame__spread-img-wrap">
-            <img
-              src={src}
-              alt={alt}
-              className="five-frame__img five-frame__img--spread"
-              style={{ objectPosition: '100% 50%' }}
-              draggable={false}
-              loading="lazy"
-            />
+            <FrameImage photo={photo} sizes="50vw" className="five-frame__img five-frame__img--spread" style={{ objectPosition: '100% 50%' }} draggable={false} />
           </div>
         </motion.div>
         <motion.div className="five-frame__spread-shadow" style={{ opacity: shadowOpacity }} />
         <motion.div className="five-frame__spread-cover" style={{ opacity: coverOpacity }} />
-      </div>
+      </button>
 
       <motion.div
         className="five-frame__caption-wrap"
@@ -181,13 +223,11 @@ function FrameEditorial({
    FRAME 03 — DARKROOM DEVELOP
    ═══════════════════════════════════════════════════════ */
 function FrameDevelop({
-  src,
-  alt,
+  photo,
   scrollYProgress,
   onClick,
 }: {
-  src: string;
-  alt: string;
+  photo: (typeof PHOTOS)[number];
   scrollYProgress: MotionValue<number>;
   onClick: () => void;
 }) {
@@ -201,26 +241,28 @@ function FrameDevelop({
 
   return (
     <FrameSection className="five-frame--develop">
-      <div
+      <button
+        type="button"
         className="five-frame__develop-container"
         onClick={onClick}
         data-cursor-label="VIEW"
+        aria-label="Open Developing photo"
       >
         <motion.div
           className="five-frame__develop-image"
           style={{
             filter: useTransform(
               [brightness, warmth] as const,
-              (b: number, w: number) => `brightness(${b}) saturate(${w})`
+              ([b, w]) => `brightness(${b}) saturate(${w})`
             ),
           }}
         >
-          <img src={src} alt={alt} className="five-frame__img" draggable={false} loading="lazy" />
+          <FrameImage photo={photo} sizes="(min-width: 700px) 700px, 80vw" className="five-frame__img" draggable={false} />
         </motion.div>
         <motion.div className="five-frame__develop-overlay" style={{ opacity: developOverlay }} />
         <motion.div className="five-frame__develop-grain" style={{ opacity: grainOpacity }} />
         <div className="five-frame__develop-border" />
-      </div>
+      </button>
 
       <motion.div
         className="five-frame__caption-wrap five-frame__caption-wrap--light"
@@ -236,13 +278,11 @@ function FrameDevelop({
    FRAME 04 — FILM STRIP / LIGHT LEAK
    ═══════════════════════════════════════════════════════ */
 function FrameFilm({
-  src,
-  alt,
+  photo,
   scrollYProgress,
   onClick,
 }: {
-  src: string;
-  alt: string;
+  photo: (typeof PHOTOS)[number];
   scrollYProgress: MotionValue<number>;
   onClick: () => void;
 }) {
@@ -257,11 +297,13 @@ function FrameFilm({
 
   return (
     <FrameSection className="five-frame--film">
-      <motion.div
+      <motion.button
+        type="button"
         className="five-frame__film-container"
         style={{ rotate, y: yOffset }}
         onClick={onClick}
         data-cursor-label="VIEW"
+        aria-label="Open Portrait photo"
       >
         <motion.div className="five-frame__film-glow" style={{ opacity: glowOpacity }} />
 
@@ -272,7 +314,7 @@ function FrameFilm({
         </div>
 
         <div className="five-frame__film-photo">
-          <img src={src} alt={alt} className="five-frame__img" draggable={false} loading="lazy" />
+          <FrameImage photo={photo} sizes="100vw" className="five-frame__img" draggable={false} />
           <motion.div className="five-frame__film-leak" style={{ opacity: leakOpacity }} />
         </div>
 
@@ -283,7 +325,7 @@ function FrameFilm({
         </div>
 
         <motion.div className="five-frame__film-border" style={{ opacity: borderOpacity }} />
-      </motion.div>
+      </motion.button>
 
       <motion.div
         className="five-frame__caption-wrap five-frame__caption-wrap--light"
@@ -299,13 +341,11 @@ function FrameFilm({
    FRAME 05 — CINEMASCOPE REVEAL
    ═══════════════════════════════════════════════════════ */
 function FrameCinemaScope({
-  src,
-  alt,
+  photo,
   scrollYProgress,
   onClick,
 }: {
-  src: string;
-  alt: string;
+  photo: (typeof PHOTOS)[number];
   scrollYProgress: MotionValue<number>;
   onClick: () => void;
 }) {
@@ -322,27 +362,39 @@ function FrameCinemaScope({
 
   return (
     <FrameSection className="five-frame--scope">
-      <motion.div className="five-frame__scope-bar five-frame__scope-bar--top" style={{ height: topBar }} />
-      <motion.div className="five-frame__scope-bar five-frame__scope-bar--bottom" style={{ height: bottomBar }} />
+      <motion.div
+        className="five-frame__scope-bar five-frame__scope-bar--top"
+        style={{ height: topBar }}
+      />
+      <motion.div
+        className="five-frame__scope-bar five-frame__scope-bar--bottom"
+        style={{ height: bottomBar }}
+      />
 
-      <div className="five-frame__scope-container" onClick={onClick} data-cursor-label="VIEW">
+      <button
+        type="button"
+        className="five-frame__scope-container"
+        onClick={onClick}
+        data-cursor-label="VIEW"
+        aria-label="Open Widescreen photo"
+      >
         <motion.div
           className="five-frame__scope-image"
           style={{
             clipPath: useTransform(
               [clipTop, clipBottom] as const,
-              (t: string, b: string) => `inset(${t} 0 ${b} 0)`
+              ([t, b]) => `inset(${t} 0 ${b} 0)`
             ),
             filter: useTransform(
               [saturate, hueRotate] as const,
-              (s: number, h: number) => `saturate(${s}) hue-rotate(${h}deg)`
+              ([s, h]) => `saturate(${s}) hue-rotate(${h}deg)`
             ),
           }}
         >
-          <img src={src} alt={alt} className="five-frame__img" draggable={false} loading="lazy" />
+          <FrameImage photo={photo} sizes="100vw" className="five-frame__img" draggable={false} />
         </motion.div>
         <motion.div className="five-frame__scope-scanlines" style={{ opacity: scanlineOpacity }} />
-      </div>
+      </button>
 
       <motion.div
         className="five-frame__caption-wrap five-frame__caption-wrap--light"
@@ -412,36 +464,15 @@ export default function FiveFrames() {
         {PHOTOS.map((photo, i) => {
           const frame = FRAMES[i];
           return (
-            <div
+            <button
               key={i}
+              type="button"
               className={`five-frame-mobile five-frame-mobile--${frame.title.toLowerCase()}`}
               onClick={() => handlePhotoClick(i)}
+              aria-label={`Open ${frame.title} photo: ${frame.num} ${frame.title} ${frame.subtitle}`}
             >
               <div className="five-frame-mobile__img-container">
-                {i === 1 ? (
-                  /* Editorial: split layout on mobile */
-                  <div className="five-frame-mobile__editorial">
-                    <div className="five-frame-mobile__editorial-half">
-                      <img
-                        src={photo.src}
-                        alt={photo.alt}
-                        className="five-frame-mobile__editorial-img"
-                        style={{ objectPosition: '0% 50%' }}
-                        loading="lazy"
-                      />
-                    </div>
-                    <div className="five-frame-mobile__editorial-gutter" />
-                    <div className="five-frame-mobile__editorial-half">
-                      <img
-                        src={photo.src}
-                        alt={photo.alt}
-                        className="five-frame-mobile__editorial-img"
-                        style={{ objectPosition: '100% 50%' }}
-                        loading="lazy"
-                      />
-                    </div>
-                  </div>
-                ) : i === 3 ? (
+                {i === 3 ? (
                   /* Film: sprocket layout on mobile */
                   <div className="five-frame-mobile__film">
                     <div className="five-frame-mobile__sprockets">
@@ -450,7 +481,7 @@ export default function FiveFrames() {
                       ))}
                     </div>
                     <div className="five-frame-mobile__film-photo">
-                      <img src={photo.src} alt={photo.alt} className="five-frame__img" loading="lazy" />
+                      <FrameImage photo={photo} sizes="100vw" className="five-frame__img" />
                     </div>
                     <div className="five-frame-mobile__sprockets">
                       {Array.from({ length: 9 }).map((_, j) => (
@@ -461,18 +492,18 @@ export default function FiveFrames() {
                 ) : i === 4 ? (
                   /* Widescreen: letterbox on mobile */
                   <div className="five-frame-mobile__scope">
-                    <div className="five-frame-mobile__scope-bar" />
-                    <img src={photo.src} alt={photo.alt} className="five-frame__img" loading="lazy" />
-                    <div className="five-frame-mobile__scope-bar" />
+                    <FrameImage photo={photo} sizes="100vw" className="five-frame__img" />
+                    <div className="five-frame-mobile__scope-bar five-frame-mobile__scope-bar--top" />
+                    <div className="five-frame-mobile__scope-bar five-frame-mobile__scope-bar--bottom" />
                   </div>
                 ) : (
                   /* Default: simple image */
-                  <img src={photo.src} alt={photo.alt} className="five-frame__img" loading="lazy" />
+                  <FrameImage photo={photo} sizes="100vw" className="five-frame__img" />
                 )}
               </div>
 
               <FrameCaption {...frame} className="five-frame__caption--mobile" />
-            </div>
+            </button>
           );
         })}
 
@@ -497,32 +528,27 @@ export default function FiveFrames() {
       <SectionHeading />
 
       <FrameCinematic
-        src={PHOTOS[0].src}
-        alt={PHOTOS[0].alt}
+        photo={PHOTOS[0]}
         scrollYProgress={scrollYProgress}
         onClick={() => handlePhotoClick(0)}
       />
       <FrameEditorial
-        src={PHOTOS[1].src}
-        alt={PHOTOS[1].alt}
+        photo={PHOTOS[1]}
         scrollYProgress={scrollYProgress}
         onClick={() => handlePhotoClick(1)}
       />
       <FrameDevelop
-        src={PHOTOS[2].src}
-        alt={PHOTOS[2].alt}
+        photo={PHOTOS[2]}
         scrollYProgress={scrollYProgress}
         onClick={() => handlePhotoClick(2)}
       />
       <FrameFilm
-        src={PHOTOS[3].src}
-        alt={PHOTOS[3].alt}
+        photo={PHOTOS[3]}
         scrollYProgress={scrollYProgress}
         onClick={() => handlePhotoClick(3)}
       />
       <FrameCinemaScope
-        src={PHOTOS[4].src}
-        alt={PHOTOS[4].alt}
+        photo={PHOTOS[4]}
         scrollYProgress={scrollYProgress}
         onClick={() => handlePhotoClick(4)}
       />

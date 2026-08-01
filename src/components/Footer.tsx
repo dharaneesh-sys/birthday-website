@@ -116,14 +116,13 @@ export default function Footer() {
         animate={isInView ? 'visible' : 'hidden'}
       >
         Made for{' '}
-        <span
+        <button
+          type="button"
           className="footer__nineteen"
           onClick={handleNineteenClick}
-          role="button"
-          tabIndex={0}
         >
           {easterEgg ? '✨' : 'Ibhi'}
-        </span>
+        </button>
       </motion.p>
 
       {/* The "19" — hero of the footer */}
@@ -133,14 +132,13 @@ export default function Footer() {
         initial="hidden"
         animate={isInView ? 'visible' : 'hidden'}
       >
-        <span
+        <button
+          type="button"
           className="footer__nineteen footer__age-num"
           onClick={handleNineteenClick}
-          role="button"
-          tabIndex={0}
         >
           {easterEgg ? '🎉' : '19'}
-        </span>
+        </button>
       </motion.div>
 
       {/* Tagline */}

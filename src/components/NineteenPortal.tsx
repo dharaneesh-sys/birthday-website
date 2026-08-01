@@ -29,25 +29,32 @@ function OrbitingParticles() {
 /* ─── Component ──────────────────────────────────────── */
 export default function NineteenPortal() {
   const sectionRef = useRef<HTMLDivElement>(null);
-  const entranceRef = useRef<HTMLDivElement>(null);
-  const isInView = useInView(entranceRef, { once: true, margin: '-100px' });
+  // Observe the UNCLIPPED section. IntersectionObserver never reports an
+  // element whose own clip-path clips it to nothing (fires with ratio 0),
+  // so observing the clipped entrance could never trigger the reveal.
+  const isInView = useInView(sectionRef, { once: true, margin: '-100px' });
   const { scrollYProgress } = useScroll({
     target: sectionRef,
     offset: ['start end', 'end start'],
   });
 
-  const scale = useTransform(scrollYProgress, [0, 0.3, 0.5], [20, 40, 80]);
-  const opacity = useTransform(scrollYProgress, [0, 0.2, 0.5, 0.7], [0, 1, 1, 0]);
+  // Compositor-friendly scale instead of font-size (which forced layout
+  // recalculation on every scroll frame).
+  const charScale = useTransform(scrollYProgress, [0, 0.3, 0.5], [0.25, 0.5, 1]);
   const split = useTransform(scrollYProgress, [0.5, 0.7], [0, 1]);
-  const leftX = useTransform(split, [0, 1], ['0%', '-40%']);
-  const rightX = useTransform(split, [0, 1], ['0%', '40%']);
+  const leftX = useTransform(split, [0, 1], ['0%', '-42%']);
+  const rightX = useTransform(split, [0, 1], ['0%', '42%']);
   const leftOpacity = useTransform(split, [0, 0.5], [1, 0]);
   const rightOpacity = useTransform(split, [0, 0.5], [1, 0]);
+
+  // Tail: closing line + watermark fill the empty back half of the scroll.
+  const tailOpacity = useTransform(scrollYProgress, [0.6, 0.76], [0, 1]);
+  const tailY = useTransform(scrollYProgress, [0.6, 0.76], [24, 0]);
+  const watermarkOpacity = useTransform(scrollYProgress, [0.58, 0.85], [0, 0.12]);
 
   return (
     <section className="nineteen-portal" ref={sectionRef} aria-label="19 transition">
       <motion.div
-        ref={entranceRef}
         className="nineteen-portal__entrance"
         initial={{ clipPath: 'circle(0% at 50% 50%)' }}
         animate={isInView ? { clipPath: 'circle(100% at 50% 50%)' } : {}}
@@ -58,45 +65,34 @@ export default function NineteenPortal() {
           <div className="nineteen-portal__text-wrap">
             <motion.span
               className="nineteen-portal__char"
-              style={{
-                fontSize: useTransform(scale, (v) => `clamp(5rem, ${v}vw, 90vw)`),
-                opacity: leftOpacity,
-                x: leftX,
-              }}
+              style={{ scale: charScale, opacity: leftOpacity, x: leftX }}
             >
               1
             </motion.span>
             <motion.span
               className="nineteen-portal__char"
-              style={{
-                fontSize: useTransform(scale, (v) => `clamp(5rem, ${v}vw, 90vw)`),
-                opacity: rightOpacity,
-                x: rightX,
-              }}
+              style={{ scale: charScale, opacity: rightOpacity, x: rightX }}
             >
               9
             </motion.span>
           </div>
 
-          {/* Background watermark */}
+          {/* Background watermark — strengthens to fill the tail */}
           <motion.div
             className="nineteen-portal__watermark"
-            style={{ opacity: useTransform(scrollYProgress, [0.6, 0.8], [0, 0.04]) }}
+            style={{ opacity: watermarkOpacity }}
             aria-hidden="true"
           >
             19
           </motion.div>
 
-          {/* XIX wax seal — appears as the portal opens */}
-          <motion.div
-            className="nineteen-portal__seal"
-            initial={{ opacity: 0, scale: 0.6, rotate: -30 }}
-            animate={isInView ? { opacity: 1, scale: 1, rotate: 0 } : {}}
-            transition={{ duration: 0.8, delay: 0.4, ease: [0.22, 1, 0.36, 1] }}
-            aria-hidden="true"
+          {/* Closing line — bridges into HappyBirthday */}
+          <motion.p
+            className="nineteen-portal__tail"
+            style={{ opacity: tailOpacity, y: tailY }}
           >
-            <span className="nineteen-portal__seal-text">XIX</span>
-          </motion.div>
+            nineteen, and the story continues
+          </motion.p>
 
           {/* Orbiting gold particles */}
           <OrbitingParticles />

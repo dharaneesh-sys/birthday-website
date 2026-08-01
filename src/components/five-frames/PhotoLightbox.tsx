@@ -1,9 +1,9 @@
-import { useEffect, useCallback, useRef } from 'react';
+import { useEffect, useCallback, useRef, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import './PhotoLightbox.css';
 
 interface PhotoLightboxProps {
-  photos: { src: string; alt: string }[];
+  photos: { src: string; alt: string; srcSet: string }[];
   selectedIndex: number;
   onClose: () => void;
   onPrev: () => void;
@@ -18,7 +18,13 @@ export default function PhotoLightbox({
   onNext,
 }: PhotoLightboxProps) {
   const touchRef = useRef({ startX: 0, startY: 0 });
-  const prevIndexRef = useRef(selectedIndex);
+  const [prevIndex, setPrevIndex] = useState(selectedIndex);
+  const [direction, setDirection] = useState(0);
+
+  if (prevIndex !== selectedIndex) {
+    setDirection(selectedIndex - prevIndex);
+    setPrevIndex(selectedIndex);
+  }
 
   /* Lock body scroll */
   useEffect(() => {
@@ -55,9 +61,6 @@ export default function PhotoLightbox({
     }
   };
 
-  const direction = selectedIndex - prevIndexRef.current;
-  prevIndexRef.current = selectedIndex;
-
   const variants = {
     enter: (dir: number) => ({ x: dir > 0 ? 300 : -300, opacity: 0 }),
     center: { x: 0, opacity: 1 },
@@ -77,7 +80,7 @@ export default function PhotoLightbox({
         aria-label="Photo viewer"
       >
         {/* Close button */}
-        <button className="lightbox__close" onClick={(e) => { e.stopPropagation(); onClose(); }} aria-label="Close">
+        <button className="lightbox__close" type="button" onClick={(e) => { e.stopPropagation(); onClose(); }} aria-label="Close">
           <svg width="24" height="24" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2" fill="none">
             <path d="M18 6L6 18M6 6l12 12" />
           </svg>
@@ -85,7 +88,7 @@ export default function PhotoLightbox({
 
         {/* Previous */}
         {selectedIndex > 0 && (
-          <button className="lightbox__nav lightbox__nav--prev" onClick={(e) => { e.stopPropagation(); onPrev(); }} aria-label="Previous photo">
+          <button className="lightbox__nav lightbox__nav--prev" type="button" onClick={(e) => { e.stopPropagation(); onPrev(); }} aria-label="Previous photo">
             <svg width="20" height="20" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2" fill="none">
               <path d="M15 18l-6-6 6-6" />
             </svg>
@@ -94,7 +97,7 @@ export default function PhotoLightbox({
 
         {/* Next */}
         {selectedIndex < photos.length - 1 && (
-          <button className="lightbox__nav lightbox__nav--next" onClick={(e) => { e.stopPropagation(); onNext(); }} aria-label="Next photo">
+          <button className="lightbox__nav lightbox__nav--next" type="button" onClick={(e) => { e.stopPropagation(); onNext(); }} aria-label="Next photo">
             <svg width="20" height="20" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2" fill="none">
               <path d="M9 18l6-6-6-6" />
             </svg>
@@ -109,18 +112,21 @@ export default function PhotoLightbox({
           onTouchEnd={handleTouchEnd}
         >
           <AnimatePresence mode="wait" custom={direction}>
-            <motion.img
-              key={selectedIndex}
-              src={photos[selectedIndex]?.src}
-              alt={photos[selectedIndex]?.alt ?? ''}
-              className="lightbox__image"
-              custom={direction}
-              variants={variants}
-              initial="enter"
-              animate="center"
-              exit="exit"
-              transition={{ duration: 0.25, ease: [0.22, 1, 0.36, 1] }}
-            />
+            <picture>
+              <source type="image/avif" srcSet={photos[selectedIndex]?.srcSet} sizes="90vw" />
+              <motion.img
+                key={selectedIndex}
+                src={photos[selectedIndex]?.src}
+                alt={photos[selectedIndex]?.alt ?? ''}
+                className="lightbox__image"
+                custom={direction}
+                variants={variants}
+                initial="enter"
+                animate="center"
+                exit="exit"
+                transition={{ duration: 0.25, ease: [0.22, 1, 0.36, 1] }}
+              />
+            </picture>
           </AnimatePresence>
         </div>
 

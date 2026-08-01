@@ -1,10 +1,13 @@
-import { useState, useEffect, useCallback, useRef } from 'react';
+import { useState, useEffect, useCallback, useRef, useLayoutEffect, type ReactNode } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import AmbientSparkles from './magic/AmbientSparkles';
 import ConfettiBurst from './magic/ConfettiBurst';
 import './HeroSection.css';
 
 const BG_IMAGE_PATH = '/images/ibhi-friend/1741450804644.jpg';
+const BG_IMAGE_AVIF = '/images/ibhi-friend/1741450804644-1080w.avif 1080w, /images/ibhi-friend/1741450804644-1200w.avif 1200w';
+const BG_IMAGE_SIZES = '100vw';
+const BG_IMAGE_PRELOAD = '/images/ibhi-friend/1741450804644-1080w.avif';
 
 /* ─── Timeline (ms) — luxury unwrapping ──────────────── */
 const T = {
@@ -96,7 +99,7 @@ function WordReveal({
   children,
   revealed,
 }: {
-  children: React.ReactNode;
+  children: ReactNode;
   revealed: boolean;
 }) {
   return (
@@ -145,6 +148,8 @@ export default function HeroSection() {
   const skipped = useRef(false);
   const buttonRef = useRef<HTMLButtonElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
+  const timersRef = useRef<number[]>([]);
+  const [ribbonTipRange, setRibbonTipRange] = useState<{ start: number; end: number } | null>(null);
 
   /* ── Preload image ── */
   useEffect(() => {
@@ -152,7 +157,7 @@ export default function HeroSection() {
     let cancelled = false;
     img.onload = () => { if (!cancelled) setImageStatus('loaded'); };
     img.onerror = () => { if (!cancelled) setImageStatus('error'); };
-    img.src = BG_IMAGE_PATH;
+    img.src = BG_IMAGE_PRELOAD;
     return () => { cancelled = true; img.onload = null; img.onerror = null; };
   }, []);
 
@@ -164,21 +169,23 @@ export default function HeroSection() {
     setShowBlack(false);
     setApertureOpen(true);
     setShowLightLeak(true);
-    setTimeout(() => {
-      setShowDust(true);
-      setShowGrain(true);
-      setShowBloom(true);
-      setSparkleVisible([true, true, true, true, true]);
-      setShowRibbon(true);
-      setShowRibbonTip(true);
-    }, 80);
-    setTimeout(() => {
-      setWordRevealed([true, true, true]);
-      setShowDivider(true);
-      setShowName(true);
-      setShowSubtitle(true);
-      setButtonPhase('text');
-    }, 200);
+    timersRef.current.push(
+      window.setTimeout(() => {
+        setShowDust(true);
+        setShowGrain(true);
+        setShowBloom(true);
+        setSparkleVisible([true, true, true, true, true]);
+        setShowRibbon(true);
+        setShowRibbonTip(true);
+      }, 80),
+      window.setTimeout(() => {
+        setWordRevealed([true, true, true]);
+        setShowDivider(true);
+        setShowName(true);
+        setShowSubtitle(true);
+        setButtonPhase('text');
+      }, 200),
+    );
   }, []);
 
   /* ── Skip event listeners ── */
@@ -207,6 +214,25 @@ export default function HeroSection() {
       window.removeEventListener('keydown', handleKey);
     };
   }, [skipToEnd]);
+
+  /* ── Ribbon-tip travel range (8%→92% of container, as pixels) ── */
+  useLayoutEffect(() => {
+    const measure = () => {
+      const el = containerRef.current;
+      if (!el) return;
+      const w = el.offsetWidth;
+      setRibbonTipRange({ start: w * 0.08, end: w * 0.92 });
+    };
+    measure();
+    window.addEventListener('resize', measure);
+    return () => window.removeEventListener('resize', measure);
+  }, []);
+
+  /* ── Clear skip/enter timers on unmount ── */
+  useEffect(() => {
+    const pending = timersRef.current;
+    return () => pending.forEach(clearTimeout);
+  }, []);
 
   /* ── Animation timeline ── */
   useEffect(() => {
@@ -258,8 +284,10 @@ export default function HeroSection() {
     setEntered(true);
     setRipple(true);
     setShowConfetti(true);
-    setTimeout(() => setRipple(false), 600);
-    setTimeout(() => setMergePhase('compact'), 1200);
+    timersRef.current.push(
+      window.setTimeout(() => setRipple(false), 600),
+      window.setTimeout(() => setMergePhase('compact'), 1200),
+    );
   }, [entered]);
 
   /* ── Reduced motion fallback ── */
@@ -272,7 +300,10 @@ export default function HeroSection() {
     return (
       <section className="hero-section" aria-label="Hero" role="banner">
         {imageStatus !== 'error' && (
-          <img src={BG_IMAGE_PATH} alt="" aria-hidden="true" className="hero-section__bg hero-section__bg--loaded" />
+          <picture>
+            <source type="image/avif" srcSet={BG_IMAGE_AVIF} sizes={BG_IMAGE_SIZES} />
+            <img src={BG_IMAGE_PATH} alt="" aria-hidden="true" className="hero-section__bg hero-section__bg--loaded" />
+          </picture>
         )}
         {imageStatus === 'error' && <div className="hero-section__fallback" aria-hidden="true" />}
         <div className="hero-section__color-grade" aria-hidden="true" />
@@ -291,7 +322,7 @@ export default function HeroSection() {
             <span className="hero-section__title-gradient">Ibhi</span>
           </h1>
           <p className="hero-section__subtitle">Nineteen looks beautiful on you.</p>
-          <button ref={buttonRef} className="hero-section__enter" onClick={handleEnter} aria-label="Enter website">
+          <button ref={buttonRef} type="button" className="hero-section__enter" onClick={handleEnter} aria-label="Enter website">
             ENTER →
           </button>
         </div>
@@ -311,7 +342,7 @@ export default function HeroSection() {
     const isCenter = idx === 0;
     return (
       <div
-        key={`sparkle-wrapper-${idx}`}
+        key={`sparkle-wrapper-${SPARKLE_POSITIONS[idx].x}-${SPARKLE_POSITIONS[idx].y}`}
         style={{
           position: 'absolute',
           left: SPARKLE_POSITIONS[idx].x,
@@ -397,8 +428,8 @@ export default function HeroSection() {
           {showRibbonTip && (
             <motion.div
               className="hero-section__ribbon-tip"
-              initial={{ left: '8%', opacity: 0 }}
-              animate={{ left: '92%', opacity: [0, 1, 0.7, 0] }}
+              initial={{ x: ribbonTipRange?.start ?? 0, y: '-50%', opacity: 0 }}
+              animate={{ x: ribbonTipRange?.end ?? 0, y: '-50%', opacity: [0, 1, 0.7, 0] }}
               transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1] }}
             />
           )}
@@ -437,14 +468,17 @@ export default function HeroSection() {
         }}
       >
         {imageStatus !== 'error' && (
-          <img
-            src={BG_IMAGE_PATH}
-            alt=""
-            aria-hidden="true"
-            className={`hero-section__bg hero-section__bg--cinematic ${
-              imageStatus === 'loaded' ? 'hero-section__bg--loaded' : 'hero-section__bg--loading'
-            }`}
-          />
+          <picture>
+            <source type="image/avif" srcSet={BG_IMAGE_AVIF} sizes={BG_IMAGE_SIZES} />
+            <img
+              src={BG_IMAGE_PATH}
+              alt=""
+              aria-hidden="true"
+              className={`hero-section__bg hero-section__bg--cinematic ${
+                imageStatus === 'loaded' ? 'hero-section__bg--loaded' : 'hero-section__bg--loading'
+              }`}
+            />
+          </picture>
         )}
       </motion.div>
 
@@ -548,6 +582,7 @@ export default function HeroSection() {
                 <div className="hero-section__enter-wrapper">
                   {buttonPhase === 'dot' && (
                     <motion.button
+                      type="button"
                       className="hero-section__enter hero-section__enter--dot"
                       initial={{ opacity: 0, scale: 0 }}
                       animate={{ opacity: 1, scale: 1 }}
@@ -557,6 +592,7 @@ export default function HeroSection() {
                   )}
                   {buttonPhase === 'outline' && (
                     <motion.button
+                      type="button"
                       className="hero-section__enter hero-section__enter--outline"
                       initial={{ scale: 0, opacity: 0 }}
                       animate={{ scale: 1, opacity: 1 }}
@@ -566,6 +602,7 @@ export default function HeroSection() {
                   )}
                   {buttonPhase === 'filled' && (
                     <motion.button
+                      type="button"
                       className="hero-section__enter hero-section__enter--filled"
                       initial={{ scale: 0.95, opacity: 0.8 }}
                       animate={{ scale: 1, opacity: 1 }}
@@ -576,6 +613,7 @@ export default function HeroSection() {
                   {buttonPhase === 'text' && (
                     <motion.button
                       ref={buttonRef}
+                      type="button"
                       className="hero-section__enter"
                       onClick={handleEnter}
                       aria-label="Enter website"

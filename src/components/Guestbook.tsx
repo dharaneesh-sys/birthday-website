@@ -1,15 +1,50 @@
 import { useState, useRef, useCallback, useEffect } from 'react';
-import { motion, useInView } from 'framer-motion';
+import { motion, useInView, type Variants } from 'framer-motion';
 import ConfettiBurst from './magic/ConfettiBurst';
 import './Guestbook.css';
 
 /* ── Config ── */
-const FORMSPREE_URL = 'https://formspree.io/f/your-form-id';
+/* Formspree endpoint is env-configurable: set VITE_FORMSPREE_ENDPOINT in your
+   .env / build env (e.g. VITE_FORMSPREE_ENDPOINT=https://formspree.io/f/xxxx).
+   It is read at submit time; when unset the form shows a "not connected" error
+   instead of posting to a dead placeholder URL. */
+const NAME_MIN_LENGTH = 2;
+const MESSAGE_MIN_LENGTH = 3;
+const MESSAGE_MAX_LENGTH = 500;
 
 type FormStatus = 'idle' | 'submitting' | 'success' | 'error';
+type FieldName = 'name' | 'message';
+type FieldErrors = Record<FieldName, string | null>;
+type FieldTouched = Record<FieldName, boolean>;
+type ErrorKind = 'not-connected' | 'network';
+
+/* ── Validation (pure, module scope) ── */
+const validateName = (value: string): string | null => {
+  const trimmed = value.trim();
+  if (trimmed.length === 0) return 'Please tell us your name.';
+  if (trimmed.length < NAME_MIN_LENGTH) return 'Your name needs at least 2 characters.';
+  return null;
+};
+
+const validateMessage = (value: string): string | null => {
+  const trimmed = value.trim();
+  if (trimmed.length === 0) return 'Please write a little wish.';
+  if (trimmed.length < MESSAGE_MIN_LENGTH) return 'Your wish needs at least 3 characters.';
+  if (trimmed.length > MESSAGE_MAX_LENGTH) return `Keep your wish under ${MESSAGE_MAX_LENGTH} characters.`;
+  return null;
+};
+
+const validateField = (field: FieldName, value: string): string | null =>
+  field === 'name' ? validateName(value) : validateMessage(value);
+
+/* ── Field state helpers (pure, module scope) ── */
+const isFocused = (id: string, focusedField: string | null) => focusedField === id;
+const isFilled = (val: string) => val.length > 0;
+const fieldClass = (id: string, val: string, focusedField: string | null) =>
+  `guestbook__field${isFocused(id, focusedField) ? ' guestbook__field--focused' : ''}${isFilled(val) ? ' guestbook__field--filled' : ''}`;
 
 /* ── Entrance variants ────────────────────────────────── */
-const cardVariants = {
+const cardVariants: Variants = {
   hidden: { opacity: 0, y: 40, scale: 0.97 },
   visible: {
     opacity: 1,
@@ -19,7 +54,7 @@ const cardVariants = {
   },
 };
 
-const fieldVariants = (i: number) => ({
+const fieldVariants = (i: number): Variants => ({
   hidden: { opacity: 0, y: 14 },
   visible: {
     opacity: 1,
@@ -28,7 +63,7 @@ const fieldVariants = (i: number) => ({
   },
 });
 
-const submitVariants = {
+const submitVariants: Variants = {
   hidden: { opacity: 0, y: 10 },
   visible: {
     opacity: 1,
@@ -50,10 +85,14 @@ export default function Guestbook() {
   const [status, setStatus] = useState<FormStatus>('idle');
   const [confettiKey, setConfettiKey] = useState(0);
   const [focusedField, setFocusedField] = useState<string | null>(null);
+  const [fieldErrors, setFieldErrors] = useState<FieldErrors>({ name: null, message: null });
+  const [touched, setTouched] = useState<FieldTouched>({ name: false, message: false });
+  const [errorKind, setErrorKind] = useState<ErrorKind | null>(null);
   const [ripples, setRipples] = useState<{ x: number; y: number; key: number }[]>([]);
   const sectionRef = useRef<HTMLElement>(null);
   const submitRef = useRef<HTMLButtonElement>(null);
   const rippleTimers = useRef<ReturnType<typeof setTimeout>[]>([]);
+  const submittingRef = useRef(false);
   const isInView = useInView(sectionRef, { once: true, margin: '-60px' });
 
   /* ── Submit ripple ── */
@@ -71,43 +110,88 @@ export default function Guestbook() {
 
   /* ── Cleanup ripple timers on unmount ── */
   useEffect(() => {
-    return () => rippleTimers.current.forEach(clearTimeout);
+    const timers = rippleTimers.current;
+    return () => timers.forEach(clearTimeout);
   }, []);
 
-  /* ── Submit handler ── */
+  /* ── Field change / blur: validate touched fields live ── */
+  const handleFieldChange = (field: FieldName) =>
+    (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+      const value = e.target.value;
+      if (field === 'name') setName(value);
+      else setMessage(value);
+      if (touched[field]) {
+        setFieldErrors(prev => ({ ...prev, [field]: validateField(field, value) }));
+      }
+    };
+
+  const handleFieldBlur = (field: FieldName) => () => {
+    setFocusedField(null);
+    setTouched(prev => ({ ...prev, [field]: true }));
+    const value = field === 'name' ? name : message;
+    setFieldErrors(prev => ({ ...prev, [field]: validateField(field, value) }));
+  };
+
+  /* ── Submit handler — guarded against double submission ── */
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (submittingRef.current) return;
+
+    const nameError = validateName(name);
+    const messageError = validateMessage(message);
+    setTouched({ name: true, message: true });
+    setFieldErrors({ name: nameError, message: messageError });
+    if (nameError || messageError) return;
+
+    submittingRef.current = true;
     setStatus('submitting');
 
     try {
-      const res = await fetch(FORMSPREE_URL, {
+      const endpoint = import.meta.env.VITE_FORMSPREE_ENDPOINT;
+      if (!endpoint) {
+        setErrorKind('not-connected');
+        setStatus('error');
+        return;
+      }
+
+      const res = await fetch(endpoint, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name, message }),
+        body: JSON.stringify({ name: name.trim(), message: message.trim() }),
       });
 
       if (res.ok) {
         setConfettiKey(prev => prev + 1);
         setStatus('success');
       } else {
+        setErrorKind('network');
         setStatus('error');
       }
     } catch {
+      setErrorKind('network');
       setStatus('error');
+    } finally {
+      submittingRef.current = false;
     }
   };
 
-  /* ── Reset form ── */
+  /* ── Reset form (after success — "Send another") ── */
   const handleReset = () => {
+    submittingRef.current = false;
     setName('');
     setMessage('');
+    setFieldErrors({ name: null, message: null });
+    setTouched({ name: false, message: false });
+    setErrorKind(null);
     setStatus('idle');
   };
 
-  const isFocused = (id: string) => focusedField === id;
-  const isFilled = (val: string) => val.length > 0;
-  const fieldClass = (id: string, val: string) =>
-    `guestbook__field${isFocused(id) ? ' guestbook__field--focused' : ''}${isFilled(val) ? ' guestbook__field--filled' : ''}`;
+  /* ── Retry (after error — back to form, keep input) ── */
+  const handleRetry = () => {
+    submittingRef.current = false;
+    setErrorKind(null);
+    setStatus('idle');
+  };
 
   return (
     <section
@@ -145,7 +229,7 @@ export default function Guestbook() {
 
         {/* ── Success State ── */}
         {status === 'success' && (
-          <div className="guestbook__success">
+          <div className="guestbook__success" role="status">
             {confettiKey > 0 && <ConfettiBurst key={confettiKey} level="small" />}
             <svg
               className="guestbook__checkmark"
@@ -179,14 +263,16 @@ export default function Guestbook() {
 
         {/* ── Error State ── */}
         {status === 'error' && (
-          <div className="guestbook__error">
+          <div className="guestbook__error" role="alert">
             <p className="guestbook__error-text">
-              Something went wrong. Please try again.
+              {errorKind === 'not-connected'
+                ? "The guestbook isn't connected yet — check back soon."
+                : "Couldn't send your wish. Check your connection and try again."}
             </p>
             <button
               type="button"
               className="guestbook__reset-btn"
-              onClick={handleReset}
+              onClick={handleRetry}
             >
               Try again
             </button>
@@ -198,7 +284,7 @@ export default function Guestbook() {
           <form className="guestbook__form" onSubmit={handleSubmit} noValidate>
             {/* Name field */}
             <motion.div
-              className={fieldClass('guestbook-name', name)}
+              className={fieldClass('guestbook-name', name, focusedField)}
               variants={fieldVariants(0)}
               initial="hidden"
               animate={isInView ? 'visible' : 'hidden'}
@@ -214,19 +300,28 @@ export default function Guestbook() {
                   name="name"
                   placeholder="..."
                   value={name}
-                  onChange={(e) => setName(e.target.value)}
+                  onChange={handleFieldChange('name')}
                   onFocus={() => setFocusedField('guestbook-name')}
-                  onBlur={() => setFocusedField(null)}
+                  onBlur={handleFieldBlur('name')}
                   required
                   disabled={status === 'submitting'}
                   autoComplete="name"
+                  aria-invalid={touched.name && !!fieldErrors.name}
+                  aria-describedby={
+                    touched.name && fieldErrors.name ? 'guestbook-name-error' : undefined
+                  }
                 />
               </div>
+              {touched.name && fieldErrors.name && (
+                <p id="guestbook-name-error" className="guestbook__field-error" role="alert">
+                  {fieldErrors.name}
+                </p>
+              )}
             </motion.div>
 
             {/* Message field */}
             <motion.div
-              className={fieldClass('guestbook-message', message)}
+              className={fieldClass('guestbook-message', message, focusedField)}
               variants={fieldVariants(1)}
               initial="hidden"
               animate={isInView ? 'visible' : 'hidden'}
@@ -241,14 +336,24 @@ export default function Guestbook() {
                   name="message"
                   placeholder="Write your wish here..."
                   value={message}
-                  onChange={(e) => setMessage(e.target.value)}
+                  onChange={handleFieldChange('message')}
                   onFocus={() => setFocusedField('guestbook-message')}
-                  onBlur={() => setFocusedField(null)}
+                  onBlur={handleFieldBlur('message')}
                   required
                   disabled={status === 'submitting'}
                   rows={5}
+                  maxLength={MESSAGE_MAX_LENGTH}
+                  aria-invalid={touched.message && !!fieldErrors.message}
+                  aria-describedby={
+                    touched.message && fieldErrors.message ? 'guestbook-message-error' : undefined
+                  }
                 />
               </div>
+              {touched.message && fieldErrors.message && (
+                <p id="guestbook-message-error" className="guestbook__field-error" role="alert">
+                  {fieldErrors.message}
+                </p>
+              )}
             </motion.div>
 
             {/* Decorative divider before submit */}
@@ -267,6 +372,7 @@ export default function Guestbook() {
                 type="submit"
                 className="guestbook__submit"
                 disabled={status === 'submitting'}
+                aria-busy={status === 'submitting'}
                 onClick={handleRipple}
               >
                 {/* Ripple effects */}

@@ -153,6 +153,21 @@ function ScratchCard({ onReveal }: { onReveal: () => void }) {
     }
   };
 
+  const revealNow = () => {
+    if (revealed) return;
+    setRevealed(true);
+    onReveal();
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    canvas.getContext('2d')?.clearRect(0, 0, canvas.width, canvas.height);
+  };
+
+  const handleScratchKeyDown = (e: React.KeyboardEvent<HTMLCanvasElement>) => {
+    if (e.key !== 'Enter' && e.key !== ' ') return;
+    e.preventDefault();
+    revealNow();
+  };
+
   return (
     <div className="playground-card scratch-card">        <h3 className="playground-card__title">Scratch Card</h3>
       <div className="scratch-card__wrapper">
@@ -171,10 +186,14 @@ function ScratchCard({ onReveal }: { onReveal: () => void }) {
           onTouchStart={handleStart}
           onTouchEnd={handleEnd}
           onTouchMove={handleMove}
+          onKeyDown={handleScratchKeyDown}
+          role="button"
+          tabIndex={0}
+          aria-label="Scratch card. Press Enter or Space to reveal the message."
         />
       </div>
       {revealed && (
-        <button className="scratch-card__reset" onClick={reset}>Scratch Again</button>
+        <button type="button" className="scratch-card__reset" onClick={reset}>Scratch Again</button>
       )}
     </div>
   );
@@ -205,13 +224,14 @@ function PhotoDeveloper({ onDevelop }: { onDevelop: () => void }) {
       <h3 className="playground-card__title">Random Frame</h3>
 
       {!photo && (
-        <button className="playground-card__btn" onClick={develop}>
+        <button type="button" className="playground-card__btn" onClick={develop}>
           DEVELOP A PHOTO
         </button>
       )}
 
       {photo && (
-        <motion.div
+        <motion.button
+          type="button"
           className="photo-developer__card"
           onClick={develop}
           initial={{ y: -40, opacity: 0 }}
@@ -242,7 +262,7 @@ function PhotoDeveloper({ onDevelop }: { onDevelop: () => void }) {
               <span className="photo-developer__stamp">19</span>
             </motion.div>
           )}
-        </motion.div>
+        </motion.button>
       )}
 
       {developed && (
@@ -264,7 +284,7 @@ function ConfettiButton() {
   return (
     <div className="playground-card confetti-button-card">
       <h3 className="playground-card__title">Celebration</h3>
-      <button className="playground-card__btn playground-card__btn--gold" onClick={fire}>
+      <button type="button" className="playground-card__btn playground-card__btn--gold" onClick={fire}>
         MAKE IT RAIN
       </button>
       {burst && <ConfettiBurst key={burst.key} level="small" />}

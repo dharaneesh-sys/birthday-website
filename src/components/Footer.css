@@ -156,6 +156,12 @@
    ============================================================ */
 
 .footer__nineteen {
+  /* Button reset — element was a span; keep appearance identical as a <button> */
+  background: none;
+  border: none;
+  padding: 0;
+  text-align: inherit;
+  text-transform: inherit;
   cursor: pointer;
   transition: color var(--duration-normal, 0.25s) ease, transform var(--duration-fast, 0.15s) var(--ease-spring, cubic-bezier(0.34, 1.56, 0.64, 1));
   user-select: none;
@@ -171,6 +177,13 @@
 .footer__nineteen:active {
   transform: scale(0.9);
   transition: transform 0.06s var(--ease-spring, cubic-bezier(0.34, 1.56, 0.64, 1));
+}
+
+/* Inline "Ibhi" button — inherit the paragraph's typography like the original span did */
+.footer__main .footer__nineteen {
+  font: inherit;
+  letter-spacing: inherit;
+  color: inherit;
 }
 
 /* ============================================================

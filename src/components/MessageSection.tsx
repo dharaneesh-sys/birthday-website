@@ -61,16 +61,15 @@ export default function MessageSection() {
                   <div className="message-envelope__flap-inner" />
                 </div>
 
-                <div
+                <button
+                  type="button"
                   className={`message-envelope__seal ${sealBreaking ? 'message-envelope__seal--breaking' : ''}`}
                   onClick={handleOpen}
-                  role="button"
-                  tabIndex={0}
                   aria-label="Open envelope"
                   data-cursor-label="OPEN"
                 >
                   <span className="message-envelope__seal-emblem">I</span>
-                </div>
+                </button>
 
                 <div className={`message-envelope__seal-ring ${sealRing ? 'message-envelope__seal-ring--active' : ''}`} aria-hidden="true" />
 
@@ -84,6 +83,7 @@ export default function MessageSection() {
                   <p className="message-envelope__address-sub">A birthday letter</p>
                   <p className="message-envelope__address-line">Open when ready</p>
                   <button
+                    type="button"
                     className="message-envelope__open-btn"
                     onClick={handleOpen}
                     aria-label="Open envelope"

@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useEffectEvent } from 'react';
 import { createPortal } from 'react-dom';
 
 /* ─── Types ──────────────────────────────────────────── */
@@ -99,6 +99,7 @@ export default function ConfettiBurst({
 }: ConfettiBurstProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const animRef = useRef<number>(0);
+  const onCompleteEvent = useEffectEvent(() => onComplete?.());
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -118,7 +119,7 @@ export default function ConfettiBurst({
       const elapsed = now - startTime;
       if (elapsed > duration) {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
-        onComplete?.();
+        onCompleteEvent();
         return;
       }
 
@@ -140,7 +141,7 @@ export default function ConfettiBurst({
 
     animRef.current = requestAnimationFrame(animate);
     return () => cancelAnimationFrame(animRef.current);
-  }, [level, originX, originY, onComplete]);
+  }, [level, originX, originY]);
 
   /* Portal the canvas to document.body so it escapes any
      will-change:transform / transform containing block. */

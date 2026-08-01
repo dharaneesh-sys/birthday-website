@@ -328,6 +328,22 @@
   cursor: not-allowed;
 }
 
+/* ── Field errors — inline, warm, quiet ── */
+.guestbook__field-error {
+  font-family: 'Inter', system-ui, sans-serif;
+  font-size: 0.75rem;
+  font-style: italic;
+  color: var(--error, #B0603C);
+  margin: 0.4rem 0 0;
+  line-height: 1.5;
+}
+
+/* Invalid fields get a quiet rust ink underline instead of gold */
+.guestbook__input[aria-invalid='true'],
+.guestbook__textarea[aria-invalid='true'] {
+  border-bottom-color: var(--error, #B0603C);
+}
+
 /* ════════════════════════════════════════════════════════════
    STAMPED LETTER BUTTON
    ════════════════════════════════════════════════════════════ */

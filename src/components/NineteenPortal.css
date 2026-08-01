@@ -52,20 +52,21 @@
   font-family: 'Playfair Display', Georgia, serif;
   font-weight: 700;
   line-height: 1;
+  font-size: clamp(5rem, 80vw, 90vw);
   background: linear-gradient(135deg, var(--gold, #C8A46B), #ffffff);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
-  will-change: transform, font-size, opacity;
+  will-change: transform, opacity;
 }
 
 /* ─── Background watermark ───────────────────────────── */
 .nineteen-portal__watermark {
   position: fixed;
-  bottom: 1rem;
-  right: 1.5rem;
+  bottom: 1.5rem;
+  right: 2rem;
   font-family: 'Playfair Display', Georgia, serif;
-  font-size: 5rem;
+  font-size: clamp(4rem, 8vw, 7rem);
   font-weight: 700;
   color: var(--gold, #C8A46B);
   pointer-events: none;
@@ -74,39 +75,20 @@
   user-select: none;
 }
 
-/* ─── Wax seal with XIX ──────────────────────────────── */
-.nineteen-portal__seal {
+/* ─── Closing line (fills the scroll tail) ───────────── */
+.nineteen-portal__tail {
   position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: 72px;
-  height: 72px;
-  border-radius: 50%;
-  background: radial-gradient(
-    circle at 40% 35%,
-    var(--gold-light, #E0C99A) 0%,
-    var(--gold, #C8A46B) 50%,
-    var(--gold-dark, #A8884D) 100%
-  );
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 3;
-  box-shadow:
-    0 2px 8px rgba(0, 0, 0, 0.15),
-    inset 0 1px 2px rgba(255, 255, 255, 0.3),
-    inset 0 -1px 2px rgba(0, 0, 0, 0.1);
-  border: 1.5px solid rgba(255, 255, 255, 0.2);
-}
-
-.nineteen-portal__seal-text {
-  font-family: 'Playfair Display', Georgia, serif;
-  font-size: 1.1rem;
-  font-weight: 700;
-  letter-spacing: 0.12em;
-  color: #fff;
-  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.15);
+  top: calc(50% + 9rem);
+  left: 0;
+  right: 0;
+  margin: 0;
+  text-align: center;
+  font-family: 'Caveat', cursive;
+  font-size: clamp(1.75rem, 4vw, 2.75rem);
+  color: var(--gold-dark, #A8884D);
+  letter-spacing: 0.02em;
+  pointer-events: none;
+  z-index: 2;
   user-select: none;
 }
 
@@ -149,5 +131,10 @@
 
   .nineteen-portal__entrance {
     clip-path: none !important;
+  }
+
+  .nineteen-portal__tail {
+    opacity: 1 !important;
+    transform: none !important;
   }
 }

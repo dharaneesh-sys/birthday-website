@@ -10,6 +10,9 @@
   padding: var(--section-padding-y, 4rem) var(--section-padding-x, 1.5rem);
   background: var(--bg-playground, #F2EDE2);
   position: relative;
+  /* Card entrance animations drift x:40 during hidden state; clip prevents
+     horizontal scrollbar on mid-size viewports without affecting the reveal */
+  overflow-x: clip;
 }
 
 /* Subtle parchment warmth */
@@ -391,6 +394,17 @@
   box-shadow: var(--shadow-lg, 0 4px 16px rgba(0,0,0,0.08), 0 16px 48px rgba(0,0,0,0.05)),
     inset 0 0 0 1px rgba(200, 164, 107, 0.15);
   transition: transform var(--duration-normal, 0.3s) var(--ease-spring, cubic-bezier(0.34, 1.56, 0.64, 1));
+}
+
+/* Button reset — element was a div; keep appearance identical as a <button> */
+button.photo-developer__card {
+  background: none;
+  border: none;
+  padding: 0;
+  font: inherit;
+  color: inherit;
+  text-align: inherit;
+  appearance: none;
 }
 
 .photo-developer__card:focus-visible {

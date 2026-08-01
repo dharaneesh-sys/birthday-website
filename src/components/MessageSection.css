@@ -199,6 +199,10 @@
    ════════════════════════════════════════════════════════════ */
 
 .message-envelope__seal {
+  /* Button reset — element was a div; keep appearance identical as a <button> */
+  border: none;
+  padding: 0;
+  appearance: none;
   position: absolute;
   top: 112px;
   left: 50%;
