@@ -12,6 +12,32 @@ const PHOTO_FILES = [
   '/images/memories/IMG_20250510_152134_431.jpg',
 ];
 
+/* ─── Keepsake contract (L4/L2: key + event, private-mode safe) ─── */
+type Keepsake = { id: string; kind: 'wish' | 'photo'; label: string; imageSrc?: string; ts: number };
+const KEEPSAKE_KEY = 'ibhi-keepsakes-v1';
+
+function readKeepsakes(): Keepsake[] {
+  try {
+    const raw = localStorage.getItem(KEEPSAKE_KEY);
+    if (!raw) return [];
+    const parsed: unknown = JSON.parse(raw);
+    return Array.isArray(parsed) ? (parsed as Keepsake[]) : [];
+  } catch {
+    return [];
+  }
+}
+
+function appendKeepsake(keepsake: Keepsake): void {
+  try {
+    const prev = readKeepsakes();
+    prev.push(keepsake);
+    localStorage.setItem(KEEPSAKE_KEY, JSON.stringify(prev));
+    window.dispatchEvent(new CustomEvent('ibhi:keepsake', { detail: keepsake }));
+  } catch {
+    /* private-mode safety: keepsake writes must never throw */
+  }
+}
+
 /* ─── Card entrance variants — each unique ───────────── */
 const cardVariants: Variants[] = [
   /* Card 1: rotates in from a slight tilt */
@@ -71,9 +97,9 @@ const subtitleVariants: Variants = {
 };
 
 /* ─── Scratch Card ───────────────────────────────────── */
-function ScratchCard({ onReveal }: { onReveal: () => void }) {
+function ScratchCard({ onReveal, onReset }: { onReveal: () => void; onReset?: () => void }) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const [scratched, setScratched] = useState(0);
+  const [, setScratched] = useState(0);
   const [revealed, setRevealed] = useState(false);
   const isDrawing = useRef(false);
 
@@ -136,6 +162,7 @@ function ScratchCard({ onReveal }: { onReveal: () => void }) {
   };
 
   const reset = () => {
+    onReset?.();
     setRevealed(false);
     setScratched(0);
     const canvas = canvasRef.current;
@@ -193,14 +220,17 @@ function ScratchCard({ onReveal }: { onReveal: () => void }) {
         />
       </div>
       {revealed && (
-        <button type="button" className="scratch-card__reset" onClick={reset}>Scratch Again</button>
+        <div className="scratch-card__actions">
+          <button type="button" className="scratch-card__reset" onClick={reset}>Scratch Again</button>
+          <span className="playground-card__kept" role="status">Kept ✓</span>
+        </div>
       )}
     </div>
   );
 }
 
 /* ─── Photo Developer (Random Frame) ─────────────────── */
-function PhotoDeveloper({ onDevelop }: { onDevelop: () => void }) {
+function PhotoDeveloper({ onDevelop }: { onDevelop: (photoSrc: string) => void }) {
   const [photo, setPhoto] = useState<string | null>(null);
   const [developing, setDeveloping] = useState(false);
   const [developed, setDeveloped] = useState(false);
@@ -213,7 +243,7 @@ function PhotoDeveloper({ onDevelop }: { onDevelop: () => void }) {
     setTimeout(() => {
       setDeveloping(false);
       setDeveloped(true);
-      onDevelop();
+      onDevelop(next);
     }, 2000);
   };
 
@@ -268,6 +298,9 @@ function PhotoDeveloper({ onDevelop }: { onDevelop: () => void }) {
       {developed && (
         <p className="photo-developer__hint">Tap to develop another</p>
       )}
+      {developed && (
+        <span className="playground-card__kept" role="status">Kept ✓</span>
+      )}
     </div>
   );
 }
@@ -283,10 +316,12 @@ function ConfettiButton() {
 
   return (
     <div className="playground-card confetti-button-card">
-      <h3 className="playground-card__title">Celebration</h3>
-      <button type="button" className="playground-card__btn playground-card__btn--gold" onClick={fire}>
-        MAKE IT RAIN
-      </button>
+      <div className="confetti-button-card__stack">
+        <h3 className="playground-card__title">Celebration</h3>
+        <button type="button" className="playground-card__btn playground-card__btn--gold" onClick={fire}>
+          MAKE IT RAIN
+        </button>
+      </div>
       {burst && <ConfettiBurst key={burst.key} level="small" />}
     </div>
   );
@@ -297,6 +332,28 @@ export default function Playground() {
   const sectionRef = useRef<HTMLElement>(null);
   const titleRef = useRef<HTMLDivElement>(null);
   const isInView = useInView(sectionRef, { once: true, margin: '-60px' });
+  /* Session guards: one keepsake per card per session; reset re-arms scratch only */
+  const scratchKeptRef = useRef(false);
+  const photoKeptRef = useRef(false);
+
+  const handleScratchReveal = useCallback(() => {
+    if (scratchKeptRef.current) return;
+    scratchKeptRef.current = true;
+    const now = Date.now();
+    appendKeepsake({ id: `wish-scratch-${now}`, kind: 'wish', label: 'Scratched: Happy 19th', ts: now });
+  }, []);
+
+  const handleScratchReset = useCallback(() => {
+    scratchKeptRef.current = false;
+  }, []);
+
+  const handlePhotoDevelop = useCallback((photoSrc: string) => {
+    if (photoKeptRef.current) return;
+    photoKeptRef.current = true;
+    const now = Date.now();
+    const frame = String(PHOTO_FILES.indexOf(photoSrc) + 1).padStart(2, '0');
+    appendKeepsake({ id: `photo-frame${frame}-${now}`, kind: 'photo', label: `Developed FRAME ${frame}`, imageSrc: photoSrc, ts: now });
+  }, []);
 
   return (
     <section className="playground" ref={sectionRef} aria-label="Birthday Playground">
@@ -326,14 +383,14 @@ export default function Playground() {
             initial="hidden"
             animate={isInView ? 'visible' : 'hidden'}
           >
-            <ScratchCard onReveal={() => {}} />
+            <ScratchCard onReveal={handleScratchReveal} onReset={handleScratchReset} />
           </motion.div>
           <motion.div
             variants={cardVariants[1]}
             initial="hidden"
             animate={isInView ? 'visible' : 'hidden'}
           >
-            <PhotoDeveloper onDevelop={() => {}} />
+            <PhotoDeveloper onDevelop={handlePhotoDevelop} />
           </motion.div>
           <motion.div
             variants={cardVariants[2]}

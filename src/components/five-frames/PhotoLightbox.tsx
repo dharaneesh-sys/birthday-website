@@ -10,6 +10,28 @@ interface PhotoLightboxProps {
   onNext: () => void;
 }
 
+/* ─── Keepsake contract (shared with L2/L6/L8 — verbatim) ─── */
+const KEEPSAKE_KEY = 'ibhi-keepsakes-v1';
+
+interface KeepsakeItem {
+  id: string;
+  kind: 'photo';
+  label: string;
+  imageSrc?: string;
+  ts: number;
+}
+
+function readKeepsakes(): KeepsakeItem[] {
+  try {
+    const raw = localStorage.getItem(KEEPSAKE_KEY);
+    if (!raw) return [];
+    const parsed: unknown = JSON.parse(raw);
+    return Array.isArray(parsed) ? (parsed as KeepsakeItem[]) : [];
+  } catch {
+    return [];
+  }
+}
+
 export default function PhotoLightbox({
   photos,
   selectedIndex,
@@ -20,6 +42,15 @@ export default function PhotoLightbox({
   const touchRef = useRef({ startX: 0, startY: 0 });
   const [prevIndex, setPrevIndex] = useState(selectedIndex);
   const [direction, setDirection] = useState(0);
+  const [kept, setKept] = useState(false);
+  const [keptSrc, setKeptSrc] = useState<string | null>(null);
+
+  /* Sync Kept confirmation with current photo (dedupe display) */
+  const currentSrc = photos[selectedIndex]?.src ?? null;
+  if (currentSrc !== keptSrc) {
+    setKeptSrc(currentSrc);
+    setKept(currentSrc ? readKeepsakes().some((k) => k.imageSrc === currentSrc) : false);
+  }
 
   if (prevIndex !== selectedIndex) {
     setDirection(selectedIndex - prevIndex);
@@ -60,6 +91,28 @@ export default function PhotoLightbox({
       else onNext();
     }
   };
+
+  const handleKeep = useCallback(() => {
+    const imageSrc = photos[selectedIndex]?.src;
+    const item: KeepsakeItem = {
+      id: `five-frames-photo-${selectedIndex}`,
+      kind: 'photo',
+      label: `Photo ${selectedIndex + 1} of ${photos.length}`,
+      imageSrc,
+      ts: Date.now(),
+    };
+    try {
+      const stored = readKeepsakes();
+      if (!stored.some((k) => k.imageSrc === item.imageSrc)) {
+        stored.push(item);
+        localStorage.setItem(KEEPSAKE_KEY, JSON.stringify(stored));
+      }
+    } catch {
+      /* private mode: storage unavailable, keep in-memory confirmation only */
+    }
+    window.dispatchEvent(new CustomEvent('ibhi:keepsake', { detail: item }));
+    setKept(true);
+  }, [photos, selectedIndex]);
 
   const variants = {
     enter: (dir: number) => ({ x: dir > 0 ? 300 : -300, opacity: 0 }),
@@ -129,6 +182,17 @@ export default function PhotoLightbox({
             </picture>
           </AnimatePresence>
         </div>
+
+        {/* Keep this photo */}
+        <button
+          className="lightbox__keep"
+          type="button"
+          onClick={(e) => { e.stopPropagation(); handleKeep(); }}
+          aria-label="Keep this photo"
+          aria-live="polite"
+        >
+          {kept ? 'Kept ✓' : 'Keep this photo'}
+        </button>
 
         {/* Counter */}
         <div className="lightbox__counter">

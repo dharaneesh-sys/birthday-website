@@ -206,6 +206,17 @@ export default function MusicPlayer() {
         A birthday track
       </motion.p>
 
+      <motion.aside
+        className="music-player__dedication"
+        variants={headingVariants}
+        initial="hidden"
+        animate={isInView ? 'visible' : 'hidden'}
+      >
+        <p className="music-player__dedication-title">On repeat, for nineteen</p>
+        <p className="music-player__dedication-sub">Ninaithu Ninaithu Parthen, her favourite track, pressed here as SIDE 19.</p>
+        <p className="music-player__dedication-cue">press play when…</p>
+      </motion.aside>
+
       {error ? (
         <p className="music-player__error">{error}</p>
       ) : (

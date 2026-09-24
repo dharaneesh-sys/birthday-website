@@ -91,7 +91,7 @@ export default function NineteenPortal() {
             className="nineteen-portal__tail"
             style={{ opacity: tailOpacity, y: tailY }}
           >
-            nineteen, and the story continues
+            nineteen, and the story continues. Happy birthday to you.
           </motion.p>
 
           {/* Orbiting gold particles */}

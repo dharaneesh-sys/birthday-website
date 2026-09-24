@@ -163,12 +163,9 @@ Base unit **4px**. Section rhythm: `--section-padding-y: 4rem` (`3rem` mobile),
 7. **Perf ceiling is design-inherent:** the scroll-linked framer-motion suite (parallax, clip-path
    reveals, sticky spreads) forces reflow + main-thread cost. Lighthouse perf ~58 mobile / ~72 desktop;
    a11y/BP/SEO are 100. Raising perf materially means redesigning the motion — out of scope.
-   (Fixed already: per-frame `filter`/`clipPath` on FiveFrames develop + scope frames are now sampled
-   to discrete steps (~8–10 writes per scroll-through instead of per-frame), letterbox bar `height`
-   animations converted to compositor `scaleY`, NineteenPortal `font-size` animation replaced with
-   `scale` transform, and the portal reveal now observes the unclipped section — observing the
-   `clip-path: circle(0%)` entrance never fired IntersectionObserver, which is why the 120vh portal
-   rendered as empty space and the seal never appeared. Desktop Style & Layout ~6.4s → ~1.0s.)
+   (Truth at cae6904: original per-frame FiveFrames animations restored per user, perf sampling reverted;
+   NineteenPortal sectionRef IO fix and fontSize→scale kept; XIX seal removed; perf ceiling re-accepted
+   as design-inherent (~58 mobile / ~72 desktop).)
 8. **Retina image cost:** mobile DPR 2.625 picks ~1081px-wide AVIFs for full-bleed frames (~529 KiB
    est. savings vs. JPEG still flagged by Lighthouse). 1080w variants added to mitigate; this is
    inherent to full-bleed imagery, not a defect.

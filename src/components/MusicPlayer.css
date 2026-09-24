@@ -62,6 +62,52 @@
   z-index: 1;
 }
 
+/* ── why-this-song dedication card (above vinyl, heading area) ── */
+.music-player__dedication {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  max-width: 400px;
+  box-sizing: border-box;
+  margin: 0 auto 2rem;
+  padding: 1.25rem 1.5rem;
+  background: var(--card, #FFFFFF);
+  border-radius: var(--radius-lg, 12px);
+  box-shadow: 0 4px 16px rgba(46, 42, 39, 0.08), 0 1px 3px rgba(46, 42, 39, 0.04);
+  text-align: center;
+}
+
+.music-player__dedication-title {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: clamp(1rem, 2vw, 1.25rem);
+  font-weight: 600;
+  color: var(--text, #2E2A27);
+  margin: 0 0 0.35rem;
+}
+
+.music-player__dedication-sub {
+  font-family: 'Inter', system-ui, sans-serif;
+  font-size: clamp(0.75rem, 1.2vw, 0.85rem);
+  line-height: 1.5;
+  color: var(--text-light, #8A7E6E);
+  margin: 0 0 0.5rem;
+}
+
+.music-player__dedication-cue {
+  font-family: 'Caveat', cursive;
+  font-size: 1.05rem;
+  color: var(--gold-dark, #A8884D);
+  margin: 0;
+}
+
+@media (max-width: 480px) {
+  .music-player__dedication {
+    max-width: 100%;
+    margin: 0 0 1.5rem;
+    padding: 1rem;
+  }
+}
+
 .music-player__error {
   color: var(--text-light, #8A7E6E);
   font-style: italic;
@@ -133,7 +179,7 @@
   background: linear-gradient(180deg, #555 0%, #3a3a3a 40%, #2a2a2a 100%);
   border-radius: 1px;
   transform-origin: top center;
-  transform: rotate(18deg);
+  transform: rotate(-8deg);
   transition: transform 0.8s var(--ease-spring, cubic-bezier(0.34, 1.56, 0.64, 1));
   z-index: 5;
   box-shadow:
@@ -183,18 +229,18 @@
   background: rgba(0, 0, 0, 0.15);
   border-radius: 1px;
   transform-origin: top center;
-  transform: rotate(18deg);
+  transform: rotate(-8deg);
   filter: blur(3px);
   transition: transform 0.8s var(--ease-spring, cubic-bezier(0.34, 1.56, 0.64, 1));
   z-index: 1;
 }
 
 .vinyl__tonearm--playing {
-  transform: rotate(-8deg);
+  transform: rotate(18deg);
 }
 
-.vinyl__tonearm--playing + .vinyl__tonearm-shadow {
-  transform: rotate(-8deg);
+.vinyl__tonearm-shadow.vinyl__tonearm--playing {
+  transform: rotate(18deg);
 }
 
 .vinyl__tonearm--playing::after {

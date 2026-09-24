@@ -1,40 +1,8 @@
-import { useRef, useMemo } from 'react';
+import { useRef } from 'react';
 import { motion, useScroll, useTransform, useInView, type Variants } from 'framer-motion';
 import './HappyBirthday.css';
 
-/* ─── Sparkle particles ──────────────────────────────── */
-function Sparkles({ count = 20 }: { count?: number }) {
-  const particles = useMemo(() =>
-    Array.from({ length: count }, (_, i) => ({
-      id: i,
-      left: `${5 + Math.random() * 90}%`,
-      top: `${10 + Math.random() * 80}%`,
-      size: 2 + Math.random() * 3,
-      delay: Math.random() * 5,
-      duration: 2 + Math.random() * 3,
-      drift: -10 + Math.random() * 20,
-    })), [count]);
-
-  return (
-    <div className="hb__sparkles" aria-hidden="true">
-      {particles.map(s => (
-        <span
-          key={s.id}
-          className="hb__sparkle"
-          style={{
-            left: s.left,
-            top: s.top,
-            width: `${s.size}px`,
-            height: `${s.size}px`,
-            animationDelay: `${s.delay}s`,
-            animationDuration: `${s.duration}s`,
-            '--drift': `${s.drift}px`,
-          } as React.CSSProperties}
-        />
-      ))}
-    </div>
-  );
-}
+import AmbientSparkles from './magic/AmbientSparkles';
 
 /* ─── Variants ────────────────────────────────────────── */
 const lineVariants: Variants = {
@@ -77,7 +45,7 @@ export default function HappyBirthday() {
   return (
     <section className="hb" ref={sectionRef} aria-label="Happy Birthday">
       {/* Floating sparkles */}
-      <Sparkles count={24} />
+      <AmbientSparkles density="low" color="var(--gold-light, #E0C99A)" twinkle />
 
       {/* Background radial glow — golden, breathes with scroll */}
       <motion.div
@@ -137,7 +105,7 @@ export default function HappyBirthday() {
           initial="hidden"
           animate={isInView ? 'visible' : 'hidden'}
         >
-          Here's to the story so far
+          Be happy and healthy.
         </motion.p>
 
         {/* Decorative divider below */}

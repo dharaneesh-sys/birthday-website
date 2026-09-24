@@ -1,4 +1,5 @@
-import { motion, useScroll, useSpring, useTransform } from 'framer-motion';
+import { useRef } from 'react';
+import { motion, useMotionValueEvent, useScroll, useSpring, useTransform } from 'framer-motion';
 import './ScrollProgressBar.css';
 
 export default function ScrollProgressBar() {
@@ -11,6 +12,15 @@ export default function ScrollProgressBar() {
 
   /* XIX appears only at the very end */
   const showXIX = useTransform(scrollYProgress, [0.92, 0.96], [0, 1]);
+
+  /* Finale: fire once per page load at the very bottom */
+  const finaleFired = useRef(false);
+  useMotionValueEvent(scrollYProgress, 'change', (v) => {
+    if (!finaleFired.current && v >= 0.985) {
+      finaleFired.current = true;
+      window.dispatchEvent(new CustomEvent('ibhi:finale'));
+    }
+  });
 
   return (
     <>

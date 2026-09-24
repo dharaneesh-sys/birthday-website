@@ -54,16 +54,16 @@ function FrameImage({
   );
 }
 
-/* ─── Frame metadata (editorial captions) ────────────── */
+/* ─── Frame metadata (warm dedications; `key` preserves mobile styling hooks) ─ */
 const FRAMES = [
-  { num: '01', title: 'Cinematic', subtitle: 'A film still, edge to edge' },
-  { num: '02', title: 'Editorial', subtitle: 'Split across two pages' },
-  { num: '03', title: 'Developing', subtitle: 'Emerging from the darkroom' },
-  { num: '04', title: 'Portrait', subtitle: 'Captured stillness' },
-  { num: '05', title: 'Widescreen', subtitle: 'The cinemascope reveal' },
+  { key: 'cinematic', num: '01', title: 'Light, kept for Ibhi', subtitle: 'First of five' },
+  { key: 'editorial', num: '02', title: 'Held gently for Ibhi', subtitle: 'Second of five' },
+  { key: 'develop', num: '03', title: 'Warmth held in light', subtitle: 'Third of five' },
+  { key: 'film', num: '04', title: 'Quiet light for Ibhi', subtitle: 'Fourth of five' },
+  { key: 'widescreen', num: '05', title: 'Light that stays shining', subtitle: 'Last of five' },
 ];
 
-/* ─── Editorial caption ──────────────────────────────── */
+/* ─── Frame caption ──────────────────────────────── */
 function FrameCaption({
   num,
   title,
@@ -138,7 +138,7 @@ function FrameCinematic({
         className="five-frame__cinematic-frame"
         onClick={onClick}
         data-cursor-label="VIEW"
-        aria-label="Open Cinematic photo"
+        aria-label="Open photo 1 of 5"
       >
         <picture>
           <source type="image/avif" srcSet={photo.srcSet} sizes="100vw" />
@@ -193,7 +193,7 @@ function FrameEditorial({
         className="five-frame__spread"
         onClick={onClick}
         data-cursor-label="VIEW"
-        aria-label="Open Editorial photo"
+        aria-label="Open photo 2 of 5"
       >
         <motion.div className="five-frame__spread-page five-frame__spread-page--left" style={{ x: leftX }}>
           <div className="five-frame__spread-img-wrap">
@@ -246,7 +246,7 @@ function FrameDevelop({
         className="five-frame__develop-container"
         onClick={onClick}
         data-cursor-label="VIEW"
-        aria-label="Open Developing photo"
+        aria-label="Open photo 3 of 5"
       >
         <motion.div
           className="five-frame__develop-image"
@@ -303,7 +303,7 @@ function FrameFilm({
         style={{ rotate, y: yOffset }}
         onClick={onClick}
         data-cursor-label="VIEW"
-        aria-label="Open Portrait photo"
+        aria-label="Open photo 4 of 5"
       >
         <motion.div className="five-frame__film-glow" style={{ opacity: glowOpacity }} />
 
@@ -376,7 +376,7 @@ function FrameCinemaScope({
         className="five-frame__scope-container"
         onClick={onClick}
         data-cursor-label="VIEW"
-        aria-label="Open Widescreen photo"
+        aria-label="Open photo 5 of 5"
       >
         <motion.div
           className="five-frame__scope-image"
@@ -418,7 +418,7 @@ function SectionHeading() {
         <span className="five-frames__divider-line" />
       </div>
       <p className="five-frames__subtitle">
-        Five photographs. Five ways of looking at light.
+        Five photographs, kept with light for Ibhi.
       </p>
     </div>
   );
@@ -467,7 +467,7 @@ export default function FiveFrames() {
             <button
               key={i}
               type="button"
-              className={`five-frame-mobile five-frame-mobile--${frame.title.toLowerCase()}`}
+              className={`five-frame-mobile five-frame-mobile--${frame.key}`}
               onClick={() => handlePhotoClick(i)}
               aria-label={`Open ${frame.title} photo: ${frame.num} ${frame.title} ${frame.subtitle}`}
             >

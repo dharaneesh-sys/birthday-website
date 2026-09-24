@@ -1,5 +1,7 @@
-import { useRef, useState, useMemo } from 'react';
+import { useEffect, useRef, useState, useMemo } from 'react';
 import { motion, useInView, type Variants } from 'framer-motion';
+import KeepsakeStrip from './KeepsakeStrip';
+import ConfettiBurst from './magic/ConfettiBurst';
 import './Footer.css';
 
 /* ─── Floating star particles ─────────────────────────── */
@@ -68,8 +70,14 @@ export default function Footer() {
   const isInView = useInView(ref, { once: true, margin: '-60px' });
   const [clickCount, setClickCount] = useState(0);
   const [easterEgg, setEasterEgg] = useState(false);
+  const [finaleKey, setFinaleKey] = useState(0);
   const egged = useRef(false);
 
+  useEffect(() => {
+    const onFinale = () => setFinaleKey((k) => k + 1);
+    window.addEventListener('ibhi:finale', onFinale);
+    return () => window.removeEventListener('ibhi:finale', onFinale);
+  }, []);
   const handleNineteenClick = () => {
     if (egged.current) return;
     const next = clickCount + 1;
@@ -108,6 +116,9 @@ export default function Footer() {
         aria-hidden="true"
       />
 
+      {/* Closing beat: keepsake strip + sealed line */}
+      <KeepsakeStrip />
+      <p className="footer__sealed">Sealed with light, for Ibhi.</p>
       {/* Main text: "Made for Ibhi" */}
       <motion.p
         className="footer__main"
@@ -163,6 +174,14 @@ export default function Footer() {
 
       {/* Fade-to-dark bottom edge — book closing gesture */}
       <div className="footer__fade-out" aria-hidden="true" />
+
+      {finaleKey > 0 && (
+        <ConfettiBurst
+          key={finaleKey}
+          level="celebration"
+          onComplete={() => setFinaleKey(0)}
+        />
+      )}
     </footer>
   );
 }

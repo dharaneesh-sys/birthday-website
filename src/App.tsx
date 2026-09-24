@@ -1,7 +1,9 @@
+import SealedEntry from './components/SealedEntry';
 import HeroSection from './components/HeroSection';
 import MemoriesSection from './components/MemoriesSection';
 import NineteenPortal from './components/NineteenPortal';
 import HappyBirthday from './components/HappyBirthday';
+import CandleWish from './components/CandleWish';
 import MusicPlayer from './components/MusicPlayer';
 import Playground from './components/Playground';
 import MessageSection from './components/MessageSection';
@@ -22,10 +24,12 @@ function App() {
       <AmbientBackground intensity="low" />
       <DecorativeShapes />
 
+      <SealedEntry />
       <HeroSection />
       <MemoriesSection />
       <NineteenPortal />
       <HappyBirthday />
+      <CandleWish />
       <MusicPlayer />
       <Playground />
       <MessageSection />

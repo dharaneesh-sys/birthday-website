@@ -1,0 +1,259 @@
+/* ============================================================
+   CandleWish — wish-then-blow ritual
+   Cream section, SVG candles, hold-to-light → tap-to-blow.
+   Motion: opacity / transform only. No mic, no autoplay.
+   ============================================================ */
+
+.cw {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  background: var(--bg-wish, #FAFAF8);
+  padding: var(--section-padding-y, 4rem) var(--section-padding-x, 1.5rem);
+}
+
+.cw__inner {
+  max-width: 560px;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.cw__headline {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: clamp(1.9rem, 5vw, 2.6rem);
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  line-height: 1.2;
+  color: var(--gold-dark, #A8884D);
+  margin: 0 0 0.5rem;
+  text-wrap: balance;
+}
+
+.cw__subline {
+  font-family: 'Inter', system-ui, sans-serif;
+  font-size: 1rem;
+  line-height: 1.6;
+  color: var(--text, #2E2A27);
+  margin: 0 0 1.75rem;
+  max-width: 42ch;
+}
+
+/* ─── Candle cluster ─────────────────────────────────── */
+
+.cw__candles {
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  gap: 1.25rem;
+  margin-bottom: 1rem;
+  min-height: 110px;
+}
+
+.cw__candle {
+  display: block;
+  overflow: visible;
+}
+
+/* Flame: hidden until lit; glow idiom mirrors hbGlowPulse gold
+   (static drop-shadow glow, animated opacity/scale only). */
+.cw__flame {
+  opacity: 0;
+  transform: scale(0.3);
+  transform-box: fill-box;
+  transform-origin: 50% 100%;
+  transition:
+    opacity 0.3s ease,
+    transform 0.3s ease;
+}
+
+.cw__flame--lit {
+  opacity: 1;
+  transform: scale(1);
+  filter: drop-shadow(0 0 6px rgba(200, 164, 107, 0.55));
+  animation: cwFlicker 1.6s ease-in-out infinite alternate;
+}
+
+.cw__candle:nth-child(2) .cw__flame--lit {
+  animation-delay: 0.4s;
+}
+
+.cw__candle:nth-child(3) .cw__flame--lit {
+  animation-delay: 0.8s;
+}
+
+@keyframes cwFlicker {
+  0% {
+    opacity: 0.85;
+    transform: scale(0.96);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1.05);
+  }
+}
+
+/* Smoke wisp: fades in after blow-out (opacity only). */
+.cw__smoke {
+  opacity: 0;
+  transition: opacity 0.6s ease;
+}
+
+.cw__smoke--show {
+  opacity: 0.75;
+}
+
+/* ─── Status line ────────────────────────────────────── */
+
+.cw__status {
+  font-family: 'Inter', system-ui, sans-serif;
+  font-size: 0.9rem;
+  line-height: 1.5;
+  color: var(--text, #2E2A27);
+  margin: 0 0 1.25rem;
+  min-height: 1.5em;
+}
+
+/* ─── Hold-to-light button (≥44px, AA contrast) ──────── */
+
+.cw__hold {
+  position: relative;
+  overflow: hidden;
+  min-height: 48px;
+  padding: 0.8rem 2.25rem;
+  font-family: 'Inter', system-ui, sans-serif;
+  font-size: 0.8rem;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #F6F1E8;
+  background: var(--text, #2E2A27);
+  border: none;
+  border-radius: var(--radius-full, 9999px);
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(46, 42, 39, 0.2);
+  -webkit-tap-highlight-color: transparent;
+  touch-action: none;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.cw__hold-label {
+  position: relative;
+  z-index: 1;
+}
+
+/* Fill ring: transform scale only, 1200ms to match HOLD_MS. */
+.cw__hold-ring {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: rgba(200, 164, 107, 0.45);
+  transform: scale(0);
+  transform-origin: center;
+}
+
+.cw--holding .cw__hold-ring {
+  transform: scale(1);
+  transition: transform 1200ms linear;
+}
+
+.cw__hold:focus-visible,
+.cw__blow:focus-visible,
+.cw__relight:focus-visible {
+  outline: 2px solid var(--gold-light, #E0C99A);
+  outline-offset: 3px;
+}
+
+/* ─── Blow-out button ────────────────────────────────── */
+
+.cw__blow {
+  min-height: 48px;
+  padding: 0.8rem 2.25rem;
+  font-family: 'Inter', system-ui, sans-serif;
+  font-size: 0.8rem;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #F6F1E8;
+  background: var(--text, #2E2A27);
+  border: none;
+  border-radius: var(--radius-full, 9999px);
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(46, 42, 39, 0.2);
+  -webkit-tap-highlight-color: transparent;
+  transition:
+    opacity 0.25s ease,
+    transform 0.25s ease;
+}
+
+.cw__blow:active {
+  transform: scale(0.94);
+}
+
+/* ─── Relight reset link ─────────────────────────────── */
+
+.cw__relight {
+  min-height: 44px;
+  min-width: 44px;
+  padding: 0.6rem 1rem;
+  font-family: 'Inter', system-ui, sans-serif;
+  font-size: 0.85rem;
+  letter-spacing: 0.04em;
+  color: var(--text, #2E2A27);
+  background: none;
+  border: none;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* ════════════════════════════════════════════════════════
+   Reduced motion: instant light/blow states.
+   (Confetti still fires — user-requested feedback.)
+   ════════════════════════════════════════════════════════ */
+
+@media (prefers-reduced-motion: reduce) {
+  .cw__flame,
+  .cw__flame--lit,
+  .cw__smoke,
+  .cw__smoke--show,
+  .cw__blow {
+    transition: none;
+  }
+
+  .cw__flame--lit {
+    animation: none;
+    filter: drop-shadow(0 0 6px rgba(200, 164, 107, 0.55));
+  }
+
+  .cw--holding .cw__hold-ring {
+    transition: none;
+  }
+}
+
+/* ════════════════════════════════════════════════════════
+   Mobile
+   ════════════════════════════════════════════════════════ */
+
+@media (max-width: 640px) {
+  .cw {
+    padding: var(--section-padding-y-mobile, 3rem) var(--section-padding-x-mobile, 1rem);
+  }
+
+  .cw__candles {
+    gap: 0.9rem;
+  }
+}
+
+/* 320px guard: hold label stays single-line (text ~209px + padding must fit 288px). */
+@media (max-width: 380px) {
+  .cw__hold,
+  .cw__blow {
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
+  }
+}

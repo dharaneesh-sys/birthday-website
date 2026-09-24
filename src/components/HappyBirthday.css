@@ -157,58 +157,10 @@
 }
 
 /* ════════════════════════════════════════════════════════════
-   SPARKLES — drifting golden dots
-   ════════════════════════════════════════════════════════════ */
-
-.hb__sparkles {
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  z-index: 1;
-  overflow: hidden;
-}
-
-.hb__sparkle {
-  position: absolute;
-  border-radius: 50%;
-  background: radial-gradient(
-    circle,
-    var(--gold-light, #E0C99A) 0%,
-    var(--gold, #C8A46B) 60%,
-    transparent 100%
-  );
-  opacity: 0;
-  animation: hbSparkleFloat 3s ease-in-out infinite;
-}
-
-@keyframes hbSparkleFloat {
-  0% {
-    opacity: 0;
-    transform: translateY(0) translateX(0) scale(0.3);
-  }
-  20% {
-    opacity: 0.8;
-    transform: translateY(-8px) translateX(var(--drift, 5px)) scale(1);
-  }
-  80% {
-    opacity: 0.6;
-    transform: translateY(-20px) translateX(calc(var(--drift, 5px) * -0.5)) scale(0.8);
-  }
-  100% {
-    opacity: 0;
-    transform: translateY(-30px) translateX(var(--drift, 5px)) scale(0.2);
-  }
-}
-
-/* ════════════════════════════════════════════════════════════
    REDUCED MOTION
    ════════════════════════════════════════════════════════════ */
 
 @media (prefers-reduced-motion: reduce) {
-  .hb__sparkle {
-    animation: none;
-    opacity: 0.3;
-  }
 
   .hb__line--name {
     animation: none;

@@ -18,6 +18,23 @@ type FieldErrors = Record<FieldName, string | null>;
 type FieldTouched = Record<FieldName, boolean>;
 type ErrorKind = 'not-connected' | 'network';
 
+type Wish = { name: string; message: string; ts: number; localOnly: boolean };
+
+const WISH_STORAGE_KEY = 'ibhi-wishes-v1';
+const WALL_MAX_ENTRIES = 50;
+
+/* Load persisted wishes — try/catch with [] fallback */
+const loadWishes = (): Wish[] => {
+  try {
+    const raw = localStorage.getItem(WISH_STORAGE_KEY);
+    if (!raw) return [];
+    const parsed: unknown = JSON.parse(raw);
+    return Array.isArray(parsed) ? (parsed as Wish[]) : [];
+  } catch {
+    return [];
+  }
+};
+
 /* ── Validation (pure, module scope) ── */
 const validateName = (value: string): string | null => {
   const trimmed = value.trim();
@@ -88,6 +105,20 @@ export default function Guestbook() {
   const [fieldErrors, setFieldErrors] = useState<FieldErrors>({ name: null, message: null });
   const [touched, setTouched] = useState<FieldTouched>({ name: false, message: false });
   const [errorKind, setErrorKind] = useState<ErrorKind | null>(null);
+  const [wishes, setWishes] = useState<Wish[]>(() => loadWishes());
+
+  /* Persist every sealed wish locally — wall addition, never replaces endpoint POST */
+  const persistWish = useCallback((wish: Wish) => {
+    setWishes(prev => {
+      const next = [wish, ...prev];
+      try {
+        localStorage.setItem(WISH_STORAGE_KEY, JSON.stringify(next));
+      } catch {
+        /* storage unavailable — wall still shows the entry for this session */
+      }
+      return next;
+    });
+  }, []);
   const [ripples, setRipples] = useState<{ x: number; y: number; key: number }[]>([]);
   const sectionRef = useRef<HTMLElement>(null);
   const submitRef = useRef<HTMLButtonElement>(null);
@@ -146,9 +177,13 @@ export default function Guestbook() {
     submittingRef.current = true;
     setStatus('submitting');
 
+    const trimmedName = name.trim();
+    const trimmedMessage = message.trim();
+
     try {
       const endpoint = import.meta.env.VITE_FORMSPREE_ENDPOINT;
       if (!endpoint) {
+        persistWish({ name: trimmedName, message: trimmedMessage, ts: Date.now(), localOnly: true });
         setErrorKind('not-connected');
         setStatus('error');
         return;
@@ -157,17 +192,20 @@ export default function Guestbook() {
       const res = await fetch(endpoint, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name: name.trim(), message: message.trim() }),
+        body: JSON.stringify({ name: trimmedName, message: trimmedMessage }),
       });
 
       if (res.ok) {
+        persistWish({ name: trimmedName, message: trimmedMessage, ts: Date.now(), localOnly: false });
         setConfettiKey(prev => prev + 1);
         setStatus('success');
       } else {
+        persistWish({ name: trimmedName, message: trimmedMessage, ts: Date.now(), localOnly: true });
         setErrorKind('network');
         setStatus('error');
       }
     } catch {
+      persistWish({ name: trimmedName, message: trimmedMessage, ts: Date.now(), localOnly: true });
       setErrorKind('network');
       setStatus('error');
     } finally {
@@ -394,6 +432,49 @@ export default function Guestbook() {
               </button>
             </motion.div>
           </form>
+        )}
+      </motion.div>
+
+      {/* Local wish wall — every sealed wish kept on this device */}
+      <motion.div
+        className="guestbook__wall"
+        variants={cardVariants}
+        initial="hidden"
+        animate={isInView ? 'visible' : 'hidden'}
+      >
+        <h3 className="guestbook__wall-heading">Wish Wall</h3>
+        <p className="guestbook__wall-subtitle">Kept wishes, newest first</p>
+        {wishes.length === 0 ? (
+          <p className="guestbook__wall-empty">No wishes yet — seal the first one ↑</p>
+        ) : (
+          <>
+            <ul className="guestbook__wall-list">
+              {[...wishes]
+                .sort((a, b) => b.ts - a.ts)
+                .slice(0, WALL_MAX_ENTRIES)
+                .map(wish => (
+                  <li key={`${wish.ts}-${wish.name}`} className="guestbook__wall-item">
+                    <p className="guestbook__wall-name">{wish.name}</p>
+                    <p className="guestbook__wall-message">{wish.message}</p>
+                    <p className="guestbook__wall-meta">
+                      <span className="guestbook__wall-date">
+                        {new Date(wish.ts).toLocaleDateString(undefined, {
+                          year: 'numeric',
+                          month: 'short',
+                          day: 'numeric',
+                        })}
+                      </span>
+                      {wish.localOnly && (
+                        <span className="guestbook__wall-tag">kept on this device ✓</span>
+                      )}
+                    </p>
+                  </li>
+                ))}
+            </ul>
+            {wishes.length > WALL_MAX_ENTRIES && (
+              <p className="guestbook__wall-note">showing latest 50</p>
+            )}
+          </>
         )}
       </motion.div>
     </section>

@@ -115,6 +115,19 @@
   z-index: 2;
 }
 
+/* --- Sealed line: closing beat under the keepsake strip --- */
+.footer__sealed {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: clamp(1rem, 2.4vw, 1.4rem);
+  font-weight: 500;
+  font-style: italic;
+  color: var(--text, #2E2A27);
+  margin: 0 0 2.5rem;
+  line-height: 1.5;
+  position: relative;
+  z-index: 2;
+}
+
 /* --- Fade-to-dark bottom edge — book closing gesture --- */
 .footer__fade-out {
   position: absolute;
