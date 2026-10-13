@@ -167,7 +167,7 @@ function FrameCinematic({
 }
 
 /* ═══════════════════════════════════════════════════════
-   FRAME 02 — EDITORIAL BOOK SPREAD
+   FRAME 02 — EDITORIAL PRINT (single photograph, no split)
    ═══════════════════════════════════════════════════════ */
 function FrameEditorial({
   photo,
@@ -179,10 +179,8 @@ function FrameEditorial({
   onClick: () => void;
 }) {
   const enter = useTransform(scrollYProgress, [0.22, 0.32], [0, 1]);
-  const leftX = useTransform(enter, [0, 1], ['-55%', '0%']);
-  const rightX = useTransform(enter, [0, 1], ['55%', '0%']);
-  const shadowOpacity = useTransform(enter, [0, 0.5, 1], [0, 0.3, 0]);
-  const coverOpacity = useTransform(enter, [0, 0.15], [1, 0]);
+  const photoOpacity = useTransform(enter, [0, 0.6], [0, 1]);
+  const photoScale = useTransform(enter, [0, 1], [0.97, 1]);
   const captionOpacity = useTransform(enter, [0.7, 1], [0, 1]);
   const captionY = useTransform(enter, [0.7, 1], [12, 0]);
 
@@ -195,18 +193,12 @@ function FrameEditorial({
         data-cursor-label="VIEW"
         aria-label="Open photo 2 of 5"
       >
-        <motion.div className="five-frame__spread-page five-frame__spread-page--left" style={{ x: leftX }}>
-          <div className="five-frame__spread-img-wrap">
-            <FrameImage photo={photo} sizes="50vw" className="five-frame__img five-frame__img--spread" draggable={false} />
-          </div>
+        <motion.div
+          className="five-frame__editorial-photo"
+          style={{ opacity: photoOpacity, scale: photoScale }}
+        >
+          <FrameImage photo={photo} sizes="(min-width: 900px) 900px, 90vw" className="five-frame__img five-frame__editorial-img" draggable={false} />
         </motion.div>
-        <motion.div className="five-frame__spread-page five-frame__spread-page--right" style={{ x: rightX }}>
-          <div className="five-frame__spread-img-wrap">
-            <FrameImage photo={photo} sizes="50vw" className="five-frame__img five-frame__img--spread" draggable={false} />
-          </div>
-        </motion.div>
-        <motion.div className="five-frame__spread-shadow" style={{ opacity: shadowOpacity }} />
-        <motion.div className="five-frame__spread-cover" style={{ opacity: coverOpacity }} />
       </button>
 
       <motion.div

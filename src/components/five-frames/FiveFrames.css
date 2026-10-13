@@ -355,25 +355,23 @@ button.five-frame-mobile.five-frame-mobile--film {
   position: relative;
 }
 
-.five-frame__spread-page--left .five-frame__spread-img-wrap picture,
-.five-frame__spread-page--right .five-frame__spread-img-wrap picture {
+/* ─── Editorial single print (frame 02 — no split) ── */
+
+.five-frame__editorial-photo {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  box-shadow: inset 0 0 0 1px rgba(200, 164, 107, 0.35);
+}
+
+.five-frame__editorial-photo picture {
   display: block;
   width: 100%;
   height: 100%;
 }
 
-.five-frame__spread-page--left .five-frame__img--spread {
-  /* left half of photo */
-}
-
-.five-frame__spread-page--right .five-frame__img--spread {
-  /* right half of photo */
-  margin-left: -100%;
-}
-
-.five-frame__img--spread {
-  width: 200%;
-  max-width: none;
+.five-frame__editorial-photo .five-frame__img {
+  width: 100%;
   height: 100%;
   object-fit: cover;
   object-position: center center;
