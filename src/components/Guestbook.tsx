@@ -5,9 +5,9 @@ import './Guestbook.css';
 
 /* ── Config ── */
 /* Formspree endpoint is env-configurable: set VITE_FORMSPREE_ENDPOINT in your
-   .env / build env (e.g. VITE_FORMSPREE_ENDPOINT=https://formspree.io/f/xxxx).
-   It is read at submit time; when unset the form shows a "not connected" error
-   instead of posting to a dead placeholder URL. */
+.env / build env (e.g. VITE_FORMSPREE_ENDPOINT=https://formspree.io/f/xxxx).
+   It is read at submit time. DEMO MODE: when unset, submit is faked locally —
+   the wish is sealed to the on-device wall with confetti, no network call. */
 const NAME_MIN_LENGTH = 2;
 const MESSAGE_MIN_LENGTH = 3;
 const MESSAGE_MAX_LENGTH = 500;
@@ -16,7 +16,6 @@ type FormStatus = 'idle' | 'submitting' | 'success' | 'error';
 type FieldName = 'name' | 'message';
 type FieldErrors = Record<FieldName, string | null>;
 type FieldTouched = Record<FieldName, boolean>;
-type ErrorKind = 'not-connected' | 'network';
 
 type Wish = { name: string; message: string; ts: number; localOnly: boolean };
 
@@ -104,7 +103,6 @@ export default function Guestbook() {
   const [focusedField, setFocusedField] = useState<string | null>(null);
   const [fieldErrors, setFieldErrors] = useState<FieldErrors>({ name: null, message: null });
   const [touched, setTouched] = useState<FieldTouched>({ name: false, message: false });
-  const [errorKind, setErrorKind] = useState<ErrorKind | null>(null);
   const [wishes, setWishes] = useState<Wish[]>(() => loadWishes());
 
   /* Persist every sealed wish locally — wall addition, never replaces endpoint POST */
@@ -181,11 +179,13 @@ export default function Guestbook() {
     const trimmedMessage = message.trim();
 
     try {
-      const endpoint = import.meta.env.VITE_FORMSPREE_ENDPOINT;
+      const endpoint = import.meta.env.VITE_FORMSPREE_ENDPOINT as string | undefined;
       if (!endpoint) {
+        /* Demo mode: no endpoint — fake a sealed wish locally. */
+        await new Promise((resolve) => setTimeout(resolve, 900));
         persistWish({ name: trimmedName, message: trimmedMessage, ts: Date.now(), localOnly: true });
-        setErrorKind('not-connected');
-        setStatus('error');
+        setConfettiKey((prev) => prev + 1);
+        setStatus('success');
         return;
       }
 
@@ -201,12 +201,10 @@ export default function Guestbook() {
         setStatus('success');
       } else {
         persistWish({ name: trimmedName, message: trimmedMessage, ts: Date.now(), localOnly: true });
-        setErrorKind('network');
         setStatus('error');
       }
     } catch {
       persistWish({ name: trimmedName, message: trimmedMessage, ts: Date.now(), localOnly: true });
-      setErrorKind('network');
       setStatus('error');
     } finally {
       submittingRef.current = false;
@@ -220,14 +218,12 @@ export default function Guestbook() {
     setMessage('');
     setFieldErrors({ name: null, message: null });
     setTouched({ name: false, message: false });
-    setErrorKind(null);
     setStatus('idle');
   };
 
   /* ── Retry (after error — back to form, keep input) ── */
   const handleRetry = () => {
     submittingRef.current = false;
-    setErrorKind(null);
     setStatus('idle');
   };
 
@@ -303,9 +299,7 @@ export default function Guestbook() {
         {status === 'error' && (
           <div className="guestbook__error" role="alert">
             <p className="guestbook__error-text">
-              {errorKind === 'not-connected'
-                ? "The guestbook isn't connected yet — check back soon."
-                : "Couldn't send your wish. Check your connection and try again."}
+              Couldn&apos;t send your wish. Check your connection and try again.
             </p>
             <button
               type="button"

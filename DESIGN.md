@@ -20,28 +20,32 @@ constellation, ribbon sweep, aperture opening onto a portrait, then word-by-word
 
 ## 2. Tokens
 
-### 2.1 Color — "Candlelight" ramp (cream → charcoal, warm only)
+### 2.1 Color — "Rose Gold Candlelight" ramp (rose-cream → warm charcoal)
 
 | Token | Value | Usage |
 |---|---|---|
-| `--bg` | `#F6F1E8` | Global page background (warm cream) |
+| `--bg` | `#FAF4EE` | Global page background (rose cream) |
 | `--card` | `#FFFFFF` | Card surfaces |
-| `--sand` | `#E7D7C1` | Secondary surface / sand accents |
-| `--warm-gray` | `#C7B8A6` | Borders, muted fills |
-| `--text` | `#2E2A27` | Primary text (warm charcoal) |
-| `--text-light` | `#8A7E6E` | Secondary text (warm taupe) |
-| `--gold` | `#C8A46B` | **The single accent.** Buttons, highlights, seals |
-| `--gold-light` | `#E0C99A` | Gold hover / light gold surfaces |
-| `--gold-dark` | `#A8884D` | Gold pressed / emphasis |
-| `--sparkle-gold` | `rgba(200,164,107,0.6)` | Ambient sparkle / particle fills |
-| `--accent` | `#F0E8D8` | Accent washes |
-| `--shadow` | `rgba(46,42,39,0.08)` | Shadow tint base (warm, matches text hue) |
+| `--sand` | `#EDD9C8` | Secondary surface / sand accents |
+| `--warm-gray` | `#C9B8AB` | Borders, muted fills |
+| `--text` | `#2E2620` | Primary text (warm charcoal) |
+| `--text-light` | `#8A7468` | Secondary text (warm taupe) |
+| `--gold` | `#C4886A` | **Primary accent** (amber-rose gold). Buttons, highlights, seals |
+| `--gold-light` | `#EDCFB3` | Champagne blush hover / light surfaces |
+| `--gold-dark` | `#A8673E` | Deep amber pressed / emphasis |
+| `--sparkle-gold` | `rgba(196,136,106,0.6)` | Ambient sparkle / particle fills |
+| `--accent` | `#F5EBE3` | Accent washes (barely-there rose) |
+| `--rose` | `#C4847A` | **Secondary accent** (deep rose). Cake script, illustration details |
+| `--rose-light` | `#EDCDC9` | Blush surfaces |
+| `--shadow` | `rgba(46,38,32,0.09)` | Shadow tint base (warm, matches text hue) |
 
 **Section rhythm** (subtle tonal variation — never a hard dark-mode jump):
-`--bg-hero #FAFAF5`, `--bg-gallery #F5F0E6`, `--bg-letter #F0EBE0`, `--bg-music #EDE7DA`,
-`--bg-playground #F2EDE2`, `--bg-wish #FAFAF8`, `--bg-footer #ECE6D9`.
+`--bg-hero #FAF6F0`, `--bg-gallery #F6EDE5`, `--bg-letter #F2E8E0`, `--bg-music #EEE4DA`,
+`--bg-playground #F3EDE6`, `--bg-wish #FBF7F3`, `--bg-footer #EEE4D9`.
 
-**Rules:** Exactly ONE accent (gold). All shadows tinted warm (match `--shadow` hue, never pure black).
+**Rules:** Two warm accents only (amber-rose gold primary, deep rose secondary). Cake/balloon illustration
+pastels (pink/blue/green/lavender) are confined inside the CandleWish SVG scene — never page washes.
+All shadows tinted warm (match `--shadow` hue, never pure black).
 No purple/blue "AI gradient" anywhere. Never introduce a cool gray.
 
 ### 2.2 Typography
