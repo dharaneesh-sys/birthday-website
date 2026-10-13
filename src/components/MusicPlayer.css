@@ -15,14 +15,14 @@
   overflow: hidden;
 }
 
-/* Ambient room lighting — warm vignette */
+/* Ambient room lighting — warm rose vignette */
 .music-player::before {
   content: '';
   position: absolute;
   inset: 0;
   background:
-    radial-gradient(ellipse at 50% 30%, rgba(200, 164, 107, 0.06) 0%, transparent 60%),
-    linear-gradient(180deg, rgba(200, 164, 107, 0.03) 0%, transparent 40%, rgba(200, 164, 107, 0.02) 100%);
+    radial-gradient(ellipse at 50% 30%, rgba(196,136,106,0.08) 0%, transparent 60%),
+    linear-gradient(180deg, rgba(196,136,106,0.04) 0%, transparent 40%, rgba(196,136,106,0.02) 100%);
   pointer-events: none;
 }
 
@@ -33,10 +33,10 @@
   top: 35%;
   left: 50%;
   transform: translate(-50%, -50%);
-  width: 380px;
-  height: 380px;
+  width: 420px;
+  height: 420px;
   border-radius: 50%;
-  background: radial-gradient(circle, rgba(200, 164, 107, 0.07) 0%, transparent 65%);
+  background: radial-gradient(circle, rgba(196,136,106,0.1) 0%, transparent 65%);
   pointer-events: none;
   z-index: 0;
 }

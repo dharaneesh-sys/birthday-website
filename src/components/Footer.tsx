@@ -118,7 +118,7 @@ export default function Footer() {
 
       {/* Closing beat: keepsake strip + sealed line */}
       <KeepsakeStrip />
-      <p className="footer__sealed">Sealed with light, for Ibhi.</p>
+      <p className="footer__sealed">Built for one person. Happy birthday, Ibhi.</p>
       {/* Main text: "Made for Ibhi" */}
       <motion.p
         className="footer__main"
@@ -159,13 +159,24 @@ export default function Footer() {
         initial="hidden"
         animate={isInView ? 'visible' : 'hidden'}
       >
-        With warmth &amp; gratitude
+        Here&apos;s to the memories still to come.
+      </motion.p>
+
+      {/* Made by credit */}
+      <motion.p
+        className="footer__maker"
+        variants={textVariants(3)}
+        initial="hidden"
+        animate={isInView ? 'visible' : 'hidden'}
+      >
+        Made by{' '}
+        <span className="footer__maker-name">Dharaneesh</span>
       </motion.p>
 
       {/* Copyright */}
       <motion.p
         className="footer__copyright"
-        variants={textVariants(3)}
+        variants={textVariants(4)}
         initial="hidden"
         animate={isInView ? 'visible' : 'hidden'}
       >

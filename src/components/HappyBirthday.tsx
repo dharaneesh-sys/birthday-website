@@ -105,7 +105,7 @@ export default function HappyBirthday() {
           initial="hidden"
           animate={isInView ? 'visible' : 'hidden'}
         >
-          Be happy and healthy.
+          A year older. Not that you needed reminding.
         </motion.p>
 
         {/* Decorative divider below */}

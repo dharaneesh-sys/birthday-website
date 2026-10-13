@@ -108,11 +108,31 @@ export default function MessageSection() {
                 <div className="message-section__ornament" aria-hidden="true" />
                 <h2 className="message-section__heading">For Ibhi</h2>
                 <p className="message-section__text">
-                  Happy 19th, Ibhi — you&apos;ve been a wonderful friend, someone who lights
-                  up every room you walk into. This little corner of the internet is my
-                  way of celebrating you and all the joy you bring into the world. May
-                  this year bring you everything you&apos;ve been dreaming of and more. With
-                  warmth and gratitude.
+                  Hi Ibhi,
+                </p>
+                <p className="message-section__text">
+                  I know we haven&apos;t been talking much lately, but I have always found
+                  you to be someone truly special — and that never changes with time or
+                  distance.
+                </p>
+                <p className="message-section__text">
+                  I wish you the most wonderful birthday you have ever had. And I have
+                  just one thing to ask of you — not something generic like{' '}
+                  <em>&ldquo;stay in touch&rdquo;</em> or{' '}
+                  <em>&ldquo;let&apos;s hang out more.&rdquo;</em> I want you to promise
+                  me this: <strong>please don&apos;t feel sad today.</strong> If you ever
+                  need to talk about anything at all, I am here. Don&apos;t ever feel alone
+                  — I will always be here for you whenever you need it, and I will always
+                  be waiting. Please don&apos;t hesitate to reach out, no matter when,
+                  no matter why.
+                </p>
+                <p className="message-section__text message-section__text--quote">
+                  &ldquo;Don&apos;t be burdened by the responsibilities of the future.
+                  Just keep moving forward — everything will become clear along the way.&rdquo;
+                </p>
+                <p className="message-section__text message-section__text--sign">
+                  With warmth, always,<br />
+                  <span className="message-section__signature">Dharaneesh</span>
                 </p>
                 <div className="message-section__ornament" aria-hidden="true" />
               </div>

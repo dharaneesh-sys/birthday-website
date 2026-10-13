@@ -1,29 +1,31 @@
 @import "tailwindcss";
 
-/* === Candlelight Design Tokens === */
+/* === Rose Gold Candlelight Design Tokens === */
 :root {
-  /* ── Colors ── */
-  --bg: #F6F1E8;
+  /* ── Colors — Rose Gold Candlelight ── */
+  --bg: #FAF4EE;
   --card: #FFFFFF;
-  --sand: #E7D7C1;
-  --warm-gray: #C7B8A6;
-  --text: #2E2A27;
-  --gold: #C8A46B;
-  --gold-light: #E0C99A;
-  --gold-dark: #A8884D;
-  --sparkle-gold: rgba(200,164,107,0.6);
-  --text-light: #8A7E6E;
-  --accent: #F0E8D8;
-  --shadow: rgba(46,42,39,0.08);
+  --sand: #EDD9C8;
+  --warm-gray: #C9B8AB;
+  --text: #2E2620;
+  --gold: #C4886A;           /* amber-rose gold — warmer, pinker */
+  --gold-light: #EDCFB3;     /* champagne blush */
+  --gold-dark: #A8673E;      /* deep amber */
+  --sparkle-gold: rgba(196,136,106,0.6);
+  --text-light: #8A7468;
+  --accent: #F5EBE3;         /* barely-there rose */
+  --rose: #C4847A;           /* deep rose — cake script, accents */
+  --rose-light: #EDCDC9;     /* blush surface */
+  --shadow: rgba(46,38,32,0.09);
 
-  /* ── Section backgrounds — subtle rhythm ── */
-  --bg-hero: #FAFAF5;
-  --bg-gallery: #F5F0E6;
-  --bg-letter: #F0EBE0;
-  --bg-music: #EDE7DA;
-  --bg-playground: #F2EDE2;
-  --bg-wish: #FAFAF8;
-  --bg-footer: #ECE6D9;
+  /* ── Section backgrounds — warm rose-cream rhythm ── */
+  --bg-hero: #FAF6F0;
+  --bg-gallery: #F6EDE5;
+  --bg-letter: #F2E8E0;
+  --bg-music: #EEE4DA;
+  --bg-playground: #F3EDE6;
+  --bg-wish: #FBF7F3;
+  --bg-footer: #EEE4D9;
 
   /* ── Easing curves ── */
   --ease-out-expo: cubic-bezier(0.22, 1, 0.36, 1);

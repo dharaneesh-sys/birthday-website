@@ -1,20 +1,19 @@
 /* ============================================================
    Footer — The Final Page of a Printed Book
-   Calm, elegant, memorable. Particles drift,
-   stars twinkle, glow breathes, then fades to dark.
+   Rose Gold Candlelight edition.
    ============================================================ */
 
 /* --- Container --- */
 .footer {
-  background: var(--bg-footer, #ECE6D9);
-  border-top: 1px solid var(--sand);
+  background: var(--bg-footer, #EEE4D9);
+  border-top: 1px solid var(--sand, #EDD9C8);
   padding: var(--section-padding-y, 4rem) var(--section-padding-x, 1.5rem) 3rem;
   text-align: center;
   position: relative;
   overflow: hidden;
 }
 
-/* Warm vignette at top — transition from previous section */
+/* Warm vignette at top */
 .footer::before {
   content: '';
   position: absolute;
@@ -22,7 +21,7 @@
   left: 0;
   right: 0;
   height: 80px;
-  background: linear-gradient(180deg, rgba(240, 235, 224, 0.4) 0%, transparent 100%);
+  background: linear-gradient(180deg, rgba(237,217,200,0.5) 0%, transparent 100%);
   pointer-events: none;
   z-index: 1;
 }
@@ -33,13 +32,13 @@
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  width: 300px;
-  height: 300px;
+  width: 360px;
+  height: 360px;
   border-radius: 50%;
   background: radial-gradient(
     circle,
-    rgba(200, 164, 107, 0.08) 0%,
-    rgba(200, 164, 107, 0.03) 40%,
+    rgba(196,136,106,0.12) 0%,
+    rgba(196,136,106,0.05) 40%,
     transparent 70%
   );
   pointer-events: none;
@@ -48,12 +47,13 @@
 
 /* --- Gold Divider — draws from center --- */
 .footer__divider {
-  width: 3rem;
+  width: 4rem;
   height: 1px;
-  background: linear-gradient(90deg, transparent, var(--gold, #C8A46B), transparent);
+  background: linear-gradient(90deg, transparent, var(--gold, #C4886A), transparent);
   margin: 0 auto 2rem;
   position: relative;
   z-index: 2;
+  opacity: 0.7;
 }
 
 /* --- Main Text: "Made for Ibhi" --- */
@@ -79,26 +79,52 @@
 
 .footer__age-num {
   font-family: 'Playfair Display', Georgia, serif;
-  font-size: clamp(3rem, 8vw, 5rem);
+  font-size: clamp(3rem, 8vw, 5.5rem);
   font-weight: 700;
-  color: var(--gold, #C8A46B);
+  color: var(--gold, #C4886A);
   line-height: 1;
   letter-spacing: -0.02em;
   display: inline-block;
-  text-shadow: 0 0 40px rgba(200, 164, 107, 0.15);
+  text-shadow:
+    0 0 40px rgba(196,136,106,0.22),
+    0 0 80px rgba(196,136,106,0.1);
 }
 
 /* --- Tagline: "With warmth & gratitude" --- */
 .footer__tagline {
   font-family: 'Caveat', cursive;
-  font-size: clamp(1rem, 2vw, 1.25rem);
+  font-size: clamp(1.1rem, 2.2vw, 1.35rem);
   font-weight: 400;
-  color: var(--text-light, #8A7E6E);
-  margin: 0 0 2rem;
+  color: var(--text-light, #8A7468);
+  margin: 0 0 1.25rem;
   line-height: 1.5;
   font-style: italic;
   position: relative;
   z-index: 2;
+}
+
+/* --- Made by credit --- */
+.footer__maker {
+  font-family: 'Inter', system-ui, sans-serif;
+  font-size: 0.7rem;
+  font-weight: 400;
+  color: var(--text-light, #8A7468);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  opacity: 0.55;
+  margin: 0 0 0.5rem;
+  position: relative;
+  z-index: 2;
+}
+
+.footer__maker-name {
+  font-family: 'Caveat', cursive;
+  font-size: 1rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  color: var(--gold, #C4886A);
+  text-transform: none;
+  opacity: 1;
 }
 
 /* --- Copyright: "© 2026" --- */
@@ -106,10 +132,10 @@
   font-family: 'Inter', system-ui, sans-serif;
   font-size: 0.6rem;
   font-weight: 400;
-  color: var(--text-light, #8A7E6E);
+  color: var(--text-light, #8A7468);
   letter-spacing: 0.15em;
   text-transform: uppercase;
-  opacity: 0.5;
+  opacity: 0.4;
   margin: 0;
   position: relative;
   z-index: 2;

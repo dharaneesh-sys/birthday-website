@@ -349,23 +349,25 @@ button.five-frame-mobile.five-frame-mobile--film {
 }
 
 .five-frame__spread-img-wrap {
-  width: 200%;
+  width: 100%;
   height: 100%;
   overflow: hidden;
+  position: relative;
 }
 
 .five-frame__spread-page--left .five-frame__spread-img-wrap {
-  margin-left: 0;
+  /* show left half of photo */
 }
 
 .five-frame__spread-page--right .five-frame__spread-img-wrap {
-  margin-left: -100%;
+  /* show right half of photo */
 }
 
 .five-frame__img--spread {
-  width: 50vw;
+  width: 100%;
   height: 100%;
   object-fit: cover;
+  object-position: center center;
   pointer-events: none;
   user-select: none;
 }

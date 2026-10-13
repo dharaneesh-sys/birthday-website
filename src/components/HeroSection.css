@@ -166,8 +166,8 @@
 }
 
 @keyframes slowZoom {
-  from { transform: scale(1.02); }
-  to   { transform: scale(1.08); }
+  from { transform: scale(1.0); }
+  to   { transform: scale(1.06); }
 }
 
 /* ════════════════════════════════════════════════════════════
@@ -223,22 +223,23 @@
   inset: 0;
   background:
     radial-gradient(
-      circle at 50% 42%,
-      rgba(200, 164, 107, 0.08) 0%,
-      transparent 50%
+      ellipse 70% 55% at 50% 40%,
+      rgba(196, 136, 106, 0.12) 0%,
+      rgba(196, 136, 106, 0.05) 40%,
+      transparent 70%
     ),
     radial-gradient(
-      circle at 30% 60%,
-      rgba(224, 201, 154, 0.04) 0%,
-      transparent 40%
+      circle at 32% 62%,
+      rgba(237, 207, 179, 0.06) 0%,
+      transparent 45%
     );
   pointer-events: none;
   z-index: 5;
-  animation: bloomPulse 7s ease-in-out infinite alternate;
+  animation: bloomPulse 8s ease-in-out infinite alternate;
 }
 
 @keyframes bloomPulse {
-  0%   { opacity: 0.7; }
+  0%   { opacity: 0.65; }
   100% { opacity: 1; }
 }
 
@@ -309,13 +310,26 @@
     180deg,
     transparent 0%,
     transparent 30%,
-    color-mix(in srgb, var(--bg-hero, #FAFAF5) 8%, transparent) 45%,
-    color-mix(in srgb, var(--bg-hero, #FAFAF5) 35%, transparent) 62%,
-    color-mix(in srgb, var(--bg-hero, #FAFAF5) 72%, transparent) 82%,
+    color-mix(in srgb, var(--bg-hero, #FAFAF5) 4%, transparent) 45%,
+    color-mix(in srgb, var(--bg-hero, #FAFAF5) 16%, transparent) 62%,
+    color-mix(in srgb, var(--bg-hero, #FAFAF5) 42%, transparent) 82%,
     var(--bg-hero, #FAFAF5) 100%
   );
   pointer-events: none;
   z-index: 8;
+}
+
+/* Caption scrim — static bottom gradient so the warm-white caption holds AA over the portrait.
+   transform/opacity-safe: no animation, pointer-events none. */
+.hero-section__caption-scrim {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 42%;
+  z-index: 10;
+  pointer-events: none;
+  background: linear-gradient(180deg, transparent 0%, rgba(46, 42, 39, 0.55) 100%);
 }
 
 /* ════════════════════════════════════════════════════════════
@@ -385,10 +399,10 @@
   font-size: clamp(0.75rem, 1.6vw, 1.1rem);
   font-weight: 500;
   font-style: italic;
-  letter-spacing: 0.18em;
+  letter-spacing: 0.2em;
   text-transform: uppercase;
-  color: var(--gold, #C8A46B);
-  opacity: 0.85;
+  color: var(--gold, #C4886A);
+  opacity: 0.9;
 }
 
 /* ════════════════════════════════════════════════════════════
@@ -447,24 +461,24 @@
   overflow: visible;
 }
 
-/* Warm gold → cream → white gradient */
+/* Warm rose-gold → cream → champagne gradient — richer than before */
 .hero-section__title-gradient {
   display: block;
   background: linear-gradient(
     135deg,
-    #E0C99A 0%,
-    #F5EDD6 25%,
-    #FFFFFF 45%,
-    #F5EDD6 65%,
-    #E0C99A 85%,
-    #C8A46B 100%
+    #EDCFB3 0%,
+    #F8EEE0 20%,
+    #FFFFFF 42%,
+    #F5EAD8 60%,
+    #EDCFB3 78%,
+    #C4886A 100%
   );
-  background-size: 200% 100%;
+  background-size: 220% 100%;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
-  filter: drop-shadow(0 2px 30px rgba(200, 164, 107, 0.15));
-  animation: titleGradientShift 8s ease-in-out infinite alternate;
+  filter: drop-shadow(0 2px 35px rgba(196, 136, 106, 0.2));
+  animation: titleGradientShift 9s ease-in-out infinite alternate;
 }
 
 @keyframes titleGradientShift {
@@ -472,27 +486,28 @@
   100% { background-position: 100% 50%; }
 }
 
-/* Light sweep across the name — fires once on reveal */
+/* Light sweep across the name — richer, more cinematic */
 .hero-section__title-sweep {
   position: absolute;
   inset: 0;
   background: linear-gradient(
     90deg,
     transparent 0%,
-    rgba(255, 255, 255, 0.15) 45%,
-    rgba(255, 255, 255, 0.25) 50%,
-    rgba(255, 255, 255, 0.15) 55%,
+    rgba(255, 248, 238, 0.12) 35%,
+    rgba(255, 252, 245, 0.32) 50%,
+    rgba(255, 248, 238, 0.12) 65%,
     transparent 100%
   );
   background-size: 200% 100%;
   background-position: -100% 0;
-  animation: titleSweep 1.2s ease-out 0.3s forwards;
+  animation: titleSweep 1.4s cubic-bezier(0.22, 1, 0.36, 1) 0.2s forwards;
   pointer-events: none;
 }
 
 @keyframes titleSweep {
-  0%   { background-position: -200% 0; }
-  100% { background-position: 200% 0; }
+  0%   { background-position: -200% 0; opacity: 0; }
+  10%  { opacity: 1; }
+  100% { background-position: 220% 0; opacity: 0; }
 }
 
 /* ════════════════════════════════════════════════════════════
@@ -504,7 +519,8 @@
   font-style: italic;
   font-size: clamp(0.85rem, 1.5vw, 1.05rem);
   font-weight: 300;
-  color: var(--text-light, #8A7E6E);
+  color: #FFFDF7;
+  text-shadow: 0 1px 2px rgba(20, 16, 12, 0.6), 0 1px 12px rgba(20, 16, 12, 0.55);
   margin: 0 0 1.75rem;
   letter-spacing: 0.02em;
 }
@@ -528,13 +544,14 @@
   align-items: center;
   justify-content: center;
   gap: 0.5rem;
-  padding: 0.7rem 2.2rem;
+  padding: 0.75rem 2.4rem;
   font-family: 'Inter', system-ui, sans-serif;
   font-size: clamp(0.8rem, 1.2vw, 0.9rem);
   font-weight: 500;
-  letter-spacing: 0.12em;
-  color: #1a1a1a;
-  background: linear-gradient(135deg, var(--gold, #C8A46B), var(--gold-light, #E0C99A));
+  letter-spacing: 0.14em;
+  color: #1a120c;
+  background: linear-gradient(135deg, #C4886A 0%, #EDCFB3 55%, #C4886A 100%);
+  background-size: 200% 100%;
   border: none;
   border-radius: var(--radius-full, 9999px);
   cursor: pointer;
@@ -542,19 +559,23 @@
   overflow: hidden;
   transition:
     transform var(--duration-fast, 0.15s) var(--ease-spring, cubic-bezier(0.34, 1.56, 0.64, 1)),
-    box-shadow var(--duration-normal, 0.25s) ease;
+    box-shadow var(--duration-normal, 0.25s) ease,
+    background-position 0.4s ease;
   box-shadow:
-    0 2px 4px rgba(0, 0, 0, 0.06),
-    0 4px 12px rgba(200, 164, 107, 0.15);
+    0 2px 6px rgba(0, 0, 0, 0.1),
+    0 6px 20px rgba(196, 136, 106, 0.25),
+    inset 0 1px 0 rgba(255, 255, 255, 0.35);
   -webkit-tap-highlight-color: transparent;
 }
 
 .hero-section__enter:hover {
-  transform: scale(1.04);
+  transform: scale(1.05) translateY(-1px);
+  background-position: 100% 0;
   box-shadow:
-    0 4px 8px rgba(0, 0, 0, 0.08),
-    0 8px 24px rgba(200, 164, 107, 0.25),
-    0 0 40px rgba(200, 164, 107, 0.1);
+    0 4px 10px rgba(0, 0, 0, 0.12),
+    0 10px 32px rgba(196, 136, 106, 0.38),
+    0 0 50px rgba(196, 136, 106, 0.14),
+    inset 0 1px 0 rgba(255, 255, 255, 0.4);
 }
 
 .hero-section__enter:active {
@@ -628,34 +649,38 @@
 /* ── Button morphing phases ── */
 
 .hero-section__enter--dot {
-  width: 4px;
-  height: 4px;
+  width: 5px;
+  height: 5px;
   padding: 0;
   border-radius: 50%;
-  background: var(--gold, #C8A46B);
+  background: var(--gold, #C4886A);
   border: none;
   color: transparent;
   font-size: 0;
   cursor: default;
   box-shadow:
     inset 0 0 0 rgba(0,0,0,0),
-    0 0 8px 2px rgba(200, 164, 107, 0.4);
+    0 0 10px 3px rgba(196, 136, 106, 0.5),
+    0 0 24px 6px rgba(196, 136, 106, 0.2);
 }
 
 .hero-section__enter--outline {
   width: auto;
   height: auto;
-  padding: 0.7rem 2.2rem;
+  padding: 0.75rem 2.4rem;
   border-radius: var(--radius-full, 9999px);
   background: transparent;
-  border: 1.5px solid var(--gold, #C8A46B);
+  border: 1.5px solid rgba(196, 136, 106, 0.8);
   color: transparent;
   font-size: 0;
-  box-shadow: 0 0 0 rgba(0,0,0,0);
+  box-shadow:
+    0 0 12px 2px rgba(196, 136, 106, 0.15),
+    inset 0 0 8px rgba(196, 136, 106, 0.05);
 }
 
 .hero-section__enter--filled {
-  background: linear-gradient(135deg, var(--gold, #C8A46B), var(--gold-light, #E0C99A));
+  background: linear-gradient(135deg, #C4886A 0%, #EDCFB3 55%, #C4886A 100%);
+  background-size: 200% 100%;
   color: transparent;
   font-size: 0;
 }
@@ -773,9 +798,9 @@
       180deg,
       transparent 0%,
       transparent 20%,
-      color-mix(in srgb, var(--bg, #F6F1E8) 12%, transparent) 32%,
-      color-mix(in srgb, var(--bg, #F6F1E8) 40%, transparent) 52%,
-      color-mix(in srgb, var(--bg, #F6F1E8) 75%, transparent) 75%,
+      color-mix(in srgb, var(--bg, #F6F1E8) 6%, transparent) 32%,
+      color-mix(in srgb, var(--bg, #F6F1E8) 22%, transparent) 52%,
+      color-mix(in srgb, var(--bg, #F6F1E8) 48%, transparent) 75%,
       var(--bg, #F6F1E8) 100%
     );
   }
@@ -867,46 +892,6 @@
     height: 18px;
   }
 
-  /* Compact mode on mobile */
-  .hero-section--compact {
-    min-height: 40vh;
-  }
-
-  .hero-section--compact .hero-section__content {
-    min-height: 40vh;
-    justify-content: center;
-    padding: 2rem 1.25rem;
-  }
-
-  .hero-section--compact .hero-section__title {
-    font-size: clamp(1.8rem, 7vw, 2.5rem);
-    margin: 0 0 0.2rem;
-  }
-
-  .hero-section--compact .hero-section__pre-title {
-    gap: 0.2em;
-  }
-
-  .hero-section--compact .hero-section__word {
-    font-size: clamp(0.5rem, 2vw, 0.65rem);
-  }
-
-  .hero-section--compact .hero-section__subtitle {
-    font-size: clamp(0.7rem, 3vw, 0.85rem);
-    margin: 0 0 0.35rem;
-  }
-
-  .hero-section--compact .hero-section__overlay {
-    background: linear-gradient(
-      180deg,
-      transparent 0%,
-      transparent 15%,
-      color-mix(in srgb, var(--bg, #F6F1E8) 15%, transparent) 30%,
-      color-mix(in srgb, var(--bg, #F6F1E8) 50%, transparent) 55%,
-      color-mix(in srgb, var(--bg, #F6F1E8) 85%, transparent) 75%,
-      var(--bg, #F6F1E8) 100%
-    );
-  }
 }
 
 /* ════════════════════════════════════════════════════════════
@@ -934,43 +919,97 @@
     font-size: 0.8rem;
   }
 
-  .hero-section--compact {
-    min-height: 45vh;
-  }
-
-  .hero-section--compact .hero-section__title {
-    font-size: 1.6rem;
-  }
-
-  .hero-section--compact .hero-section__content {
-    padding: 1.5rem 1rem;
-  }
 }
 
 /* ════════════════════════════════════════════════════════════
-   COMPACT MODE — hero merges into next section
+   COMPACT MODE — full-portrait 3:4 + cream caption block
+   Source photo is 1200x1600 (3:4 full-length). The old 35vh
+   landscape strip is DEAD: no object-fit value can fit a 3:4
+   portrait into a wide strip without cropping heads or
+   squashing bodies. So the compact aperture is no longer an
+   absolute full-bleed layer — it is an in-flow box locked to
+   the photo's own ratio:
+     width = min(100%, 72vh * 0.75) / aspect-ratio: 3 / 4
+   Cover over an exactly-matching box = ZERO crop, ZERO
+   distortion at every viewport (proof in learnings). slowZoom
+   / developWarm, merge timing, settle cascade, auto-merge,
+   ENTER, skip, reduced-motion all untouched. The caption
+   flows BELOW the photo as a plain cream block — no text over
+   the portrait, so the bottom scrim + compact overlay blend
+   are disabled here (cinematic rules above untouched).
    ════════════════════════════════════════════════════════════ */
 
 .hero-section--compact {
-  min-height: 35vh;
+  min-height: 0;
+  background: var(--bg, #F6F1E8);
 }
 
+/* Portrait box: in-flow, ratio-locked, viewport-capped */
+.hero-section--compact .hero-section__aperture {
+  position: relative;
+  inset: auto;
+  width: min(100%, calc(72vh * 0.75));
+  aspect-ratio: 3 / 4;
+  margin-inline: auto;
+  z-index: 1;
+  transform: scale(1) !important;
+}
+
+/* Exact-ratio fill: cover with zero crop. object-position is a
+   deliberate no-op center (never the old 50% 20% strip bias). */
+.hero-section--compact .hero-section__bg {
+  object-fit: cover;
+  width: 100%;
+  height: 100%;
+  object-position: 50% 50%;
+}
+
+/* No text over the portrait in compact: readability layers off
+   (they would tint the photo and dirty the cream block). */
+.hero-section--compact .hero-section__overlay,
+.hero-section--compact .hero-section__caption-scrim {
+  display: none;
+}
+
+/* Caption: plain cream block below the photo, centered. */
 .hero-section--compact .hero-section__content {
-  min-height: 35vh;
-  justify-content: center;
-  padding: clamp(2rem, 4vw, 3rem);
+  position: relative;
+  min-height: 0;
+  justify-content: flex-start;
+  align-items: center;
+  text-align: center;
+  background: var(--bg, #F6F1E8);
+  padding: clamp(1.25rem, 3vh, 2rem) clamp(1rem, 4vw, 2rem) 0.5rem;
 }
 
-.hero-section--compact .hero-section__overlay {
-  background: linear-gradient(
-    180deg,
-    transparent 0%,
-    transparent 20%,
-    color-mix(in srgb, var(--bg, #F6F1E8) 15%, transparent) 40%,
-    color-mix(in srgb, var(--bg, #F6F1E8) 50%, transparent) 60%,
-    color-mix(in srgb, var(--bg, #F6F1E8) 80%, transparent) 78%,
-    var(--bg, #F6F1E8) 100%
-  );
+/* Cream-block ink: charcoal title + subtitle */
+.hero-section--compact .hero-section__title {
+  font-size: clamp(2rem, 5vw, 3.5rem);
+  line-height: 1.15;
+  margin: 0 0 0.5rem;
+}
+
+.hero-section--compact .hero-section__title-gradient {
+  background: none;
+  -webkit-text-fill-color: var(--text, #2E2A27);
+  color: var(--text, #2E2A27);
+  animation: none;
+  filter: none;
+}
+
+.hero-section--compact .hero-section__pre-title {
+  flex-wrap: nowrap;
+  justify-content: center;
+  margin-bottom: 0.5rem;
+}
+
+.hero-section--compact .hero-section__subtitle {
+  color: var(--text, #2E2A27);
+  text-shadow: none;
+  line-height: 1.5;
+  padding-bottom: 0.12em;
+  text-wrap: balance;
+  margin: 0 0 0.5rem;
 }
 
 .hero-section--compact .hero-section__footnote,
@@ -978,17 +1017,17 @@
   display: none;
 }
 
-.hero-section--compact .hero-section__title {
-  font-size: clamp(2rem, 5vw, 3.5rem);
-  margin: 0 0 0.25rem;
-}
-
-.hero-section--compact .hero-section__pre-title {
-  margin-bottom: 0.05rem;
-}
-
-.hero-section--compact .hero-section__subtitle {
-  margin: 0 0 0.5rem;
+.hero-section--compact .hero-section__settle-cue {
+  position: relative;
+  bottom: auto;
+  left: auto;
+  transform: none;
+  margin: 1.25rem auto 2.5rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.35rem;
+  z-index: 12;
 }
 
 .hero-section--compact .hero-section__bloom,
@@ -1000,10 +1039,6 @@
 .hero-section--compact .hero-section__ribbon-tip {
   opacity: 0;
   transition: opacity 0.6s ease;
-}
-
-.hero-section--compact .hero-section__aperture {
-  transform: scale(1) !important;
 }
 
 /* ════════════════════════════════════════════════════════════
@@ -1074,5 +1109,536 @@
 
   .hero-section__enter:active {
     transform: none !important;
+  }
+}
+
+
+/* ════════════════════════════════════════════════════════════
+   ENTER SEQUENCE — three-act click transition (total ≤1500ms)
+   Act 1 (0–350ms): letter dispersal + shockwave ring
+   Act 2 (350–950ms): warm-white flash + portrait bloom + trails
+   Act 3 (950–1500ms): compact merge + stagger settle + cue
+   transform / opacity / filter only — no layout properties
+   ════════════════════════════════════════════════════════════ */
+
+/* ── Act 1: ENTER letters scatter outward ── */
+.hero-section__enter-letter {
+  display: inline-block;
+  will-change: transform, opacity;
+}
+
+.hero-section__enter--dispersing {
+  animation: enterButtonFade 350ms ease-out forwards;
+  pointer-events: none;
+}
+
+.hero-section__enter--dispersing .hero-section__enter-letter {
+  animation: enterLetterDisperse 350ms var(--ease-spring, cubic-bezier(0.34, 1.56, 0.64, 1)) both;
+  animation-delay: calc(var(--i, 0) * 32ms);
+}
+
+@keyframes enterButtonFade {
+  from { transform: scale(1); opacity: 1; }
+  to   { transform: scale(1.12); opacity: 0; }
+}
+
+@keyframes enterLetterDisperse {
+  0%   { transform: translate(0, 0) rotate(0deg); opacity: 1; filter: blur(0); }
+  45%  { opacity: 1; filter: blur(2.5px); }
+  100% { transform: translate(var(--dx, 0px), var(--dy, -32px)) rotate(var(--rot, 0deg)); opacity: 0; filter: blur(0); }
+}
+
+/* ── Act 1: shockwave ring (vmin-sized, scale transform only) ── */
+.hero-section__shockwave {
+  position: fixed;
+  width: 22vmin;
+  height: 22vmin;
+  border: 1.5px solid var(--gold-light, #E0C99A);
+  border-radius: 50%;
+  transform: translate(-50%, -50%) scale(0);
+  transform-origin: center;
+  opacity: 1;
+  pointer-events: none;
+  z-index: 30;
+  animation: enterShockwave 900ms var(--ease-out-expo, cubic-bezier(0.22, 1, 0.36, 1)) forwards;
+}
+
+@keyframes enterShockwave {
+  from { transform: translate(-50%, -50%) scale(0); opacity: 1; }
+  to   { transform: translate(-50%, -50%) scale(3); opacity: 0; }
+}
+
+/* ── Act 2: warm-white radial flash (candle white, not a new hue) ── */
+.hero-section__enter-flash {
+  position: absolute;
+  inset: 0;
+  z-index: 28;
+  pointer-events: none;
+  background: radial-gradient(
+    circle at 50% 72%,
+    #FFFDF7 0%,
+    rgba(255, 253, 247, 0.55) 35%,
+    transparent 70%
+  );
+  opacity: 0;
+  animation: enterFlash 600ms ease-out forwards;
+}
+
+@keyframes enterFlash {
+  0%   { opacity: 0; }
+  30%  { opacity: 0.9; }
+  55%  { opacity: 0.45; }
+  100% { opacity: 0; }
+}
+
+/* ── Act 2: portrait bloom (filter glow swell only) ── */
+/* ── Act 2: portrait bloom (filter glow swell only, 700ms + settle) ── */
+.hero-section__aperture--bloom {
+  filter: drop-shadow(0 0 28px rgba(200, 164, 107, 0.5));
+  animation: portraitBloom 700ms ease-out both;
+  transition:
+    transform 0.8s var(--ease-out-expo, cubic-bezier(0.22, 1, 0.36, 1)),
+    filter 0.7s ease;
+}
+
+@keyframes portraitBloom {
+  0%   { filter: drop-shadow(0 0 12px rgba(200, 164, 107, 0.25)); }
+  55%  { filter: drop-shadow(0 0 34px rgba(200, 164, 107, 0.55)); }
+  100% { filter: drop-shadow(0 0 22px rgba(200, 164, 107, 0.4)); }
+}
+/* ── Act 2: sparkle trails rising from the burst point ── */
+.hero-section__trails {
+  position: fixed;
+  z-index: 29;
+  pointer-events: none;
+  transform: translate(-50%, -50%);
+}
+
+.hero-section__trail {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: var(--trail-size, 10px);
+  height: var(--trail-size, 10px);
+  fill: var(--gold-light, #E0C99A);
+  opacity: 0;
+  animation: trailRise 900ms var(--ease-out-expo, cubic-bezier(0.22, 1, 0.36, 1)) forwards;
+  animation-delay: var(--trail-delay, 0ms);
+}
+
+@keyframes trailRise {
+  0%   { transform: translate(-50%, -40%) translateY(0) scale(1); opacity: 0; }
+  15%  { opacity: 0.9; }
+  100% { transform: translate(calc(-50% + var(--dx, 0px)), -50%) translateY(-130px) scale(0.4); opacity: 0; }
+}
+
+/* ── Act 3: compact content stagger fade-up (y 12→0, 60ms stagger) ── */
+.hero-section__post-item {
+  animation: postEnterUp 0.5s var(--ease-out-expo, cubic-bezier(0.22, 1, 0.36, 1)) both;
+  animation-delay: calc(var(--i, 0) * 60ms);
+}
+
+@keyframes postEnterUp {
+  from { transform: translateY(12px); opacity: 0; }
+  to   { transform: translateY(0); opacity: 1; }
+}
+
+/* ── Act 3: settle scroll cue (cue only — never auto-scrolls) ── */
+.hero-section__settle-cue {
+  position: relative;
+  margin: 1.25rem auto 2.5rem;
+  z-index: 12;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.25rem;
+  pointer-events: none;
+  animation: postEnterUp 0.5s ease-out both;
+}
+
+.hero-section__settle-cue-label {
+  font-family: 'Caveat', cursive;
+  font-size: clamp(0.85rem, 1.4vw, 1rem);
+  color: var(--text-light, #8A7E6E);
+  white-space: nowrap;
+}
+
+/* ── IDLE ENCHANTMENT (loops gated off under prefers-reduced-motion) ── */
+.hero-section__enter--enchanted {
+  animation:
+    enterButtonIn 0.2s ease-out,
+    enterBreathe 3s ease-in-out 0.2s infinite;
+}
+
+@keyframes enterButtonIn {
+  from { transform: scale(0.96); opacity: 0; }
+  to   { transform: scale(1); opacity: 1; }
+}
+
+@keyframes enterBreathe {
+  0%, 100% {
+    box-shadow:
+      0 2px 4px rgba(0, 0, 0, 0.06),
+      0 4px 12px rgba(200, 164, 107, 0.15);
+  }
+  50% {
+    box-shadow:
+      0 2px 4px rgba(0, 0, 0, 0.06),
+      0 6px 22px rgba(200, 164, 107, 0.35),
+      0 0 44px rgba(200, 164, 107, 0.18);
+  }
+}
+
+/* Periodic shimmer sweep across the letters (loop every ~4s) */
+.hero-section__enter--enchanted::before {
+  opacity: 1;
+  animation: enterShimmerSweep 4s ease-in-out infinite;
+}
+
+@keyframes enterShimmerSweep {
+  0%   { background-position: -100% 0; }
+  35%  { background-position: 200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+/* 3 tiny orbiting sparkles converging on the pill */
+.hero-section__enter-orbit {
+  position: absolute;
+  inset: -16px;
+  pointer-events: none;
+}
+
+.hero-section__enter-orbit-star {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 10px;
+  height: 10px;
+  margin: -5px 0 0 -5px;
+  fill: var(--gold-light, #E0C99A);
+  opacity: 0;
+  animation: enterOrbitConverge 6s ease-in-out infinite;
+  animation-delay: var(--orbit-delay, 0s);
+}
+
+@keyframes enterOrbitConverge {
+  0%   { transform: translate(var(--ox, 0px), var(--oy, 0px)) scale(0.5); opacity: 0; }
+  30%  { opacity: 0.9; }
+  55%  { transform: translate(0, 0) scale(1); opacity: 1; }
+  75%  { transform: translate(0, 0) scale(0.6); opacity: 0; }
+  100% { transform: translate(0, 0) scale(0.6); opacity: 0; }
+}
+
+/* ── ANTICIPATION: 120ms inhale on press (kills idle loops while held) ── */
+.hero-section__enter--enchanted.hero-section__enter--inhale {
+  animation: none;
+}
+
+.hero-section__enter--enchanted.hero-section__enter--dispersing {
+  animation: enterButtonFade 350ms ease-out forwards;
+}
+
+.hero-section__enter--inhale {
+  transform: scale(0.94);
+  box-shadow:
+    0 1px 2px rgba(0, 0, 0, 0.08),
+    0 2px 8px rgba(200, 164, 107, 0.2);
+  transition:
+    transform 120ms cubic-bezier(0.22, 1, 0.36, 1),
+    box-shadow 120ms ease;
+}
+
+.hero-section__enter--inhale::before {
+  animation: none;
+  opacity: 0;
+}
+
+/* ── Act 1: second shockwave ring (thinner, delayed 120ms, smaller) ── */
+.hero-section__shockwave--second {
+  border-width: 1px;
+  animation: enterShockwave2 800ms var(--ease-out-expo, cubic-bezier(0.22, 1, 0.36, 1)) 120ms both;
+}
+
+@keyframes enterShockwave2 {
+  from { transform: translate(-50%, -50%) scale(0.4); opacity: 0.9; }
+  to   { transform: translate(-50%, -50%) scale(2.2); opacity: 0; }
+}
+
+/* ── Act 2: faint gold tint melting in behind the warm-white flash ── */
+.hero-section__enter-flash--gold {
+  background: radial-gradient(
+    circle at 50% 72%,
+    rgba(200, 164, 107, 0.5) 0%,
+    rgba(200, 164, 107, 0.18) 40%,
+    transparent 70%
+  );
+  animation: enterFlashGold 600ms ease-out 150ms both;
+}
+
+@keyframes enterFlashGold {
+  0%   { opacity: 0; }
+  40%  { opacity: 0.35; }
+  100% { opacity: 0; }
+}
+
+/* ── Act 1: rising gold-dust column (7 dots, translateY −160px) ── */
+.hero-section__gold-dust {
+  position: fixed;
+  z-index: 29;
+  pointer-events: none;
+  transform: translate(-50%, -50%);
+}
+
+.hero-section__gold-dot {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 3px;
+  height: 3px;
+  border-radius: 50%;
+  background: var(--gold-light, #E0C99A);
+  box-shadow: 0 0 6px 1px rgba(200, 164, 107, 0.5);
+  opacity: 0;
+  animation: goldDustRise 800ms var(--ease-out-expo, cubic-bezier(0.22, 1, 0.36, 1)) both;
+}
+
+@keyframes goldDustRise {
+  0%   { transform: translate(-50%, -50%) translateY(0) scale(1); opacity: 0; }
+  20%  { opacity: 0.9; }
+  100% { transform: translate(calc(-50% + var(--dx, 0px)), -50%) translateY(-160px) scale(0.4); opacity: 0; }
+}
+
+/* ── Decorative morph stages are spans, never interactive ── */
+.hero-section__enter--outline,
+.hero-section__enter--filled {
+  cursor: default;
+}
+
+/* ── Settle: softer double-chevron (second smaller, fainter, delayed) ── */
+.hero-section__settle-chevrons {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.hero-section__settle-chevrons .hero-section__scroll-chevron {
+  animation: settleBob 2.6s ease-in-out infinite;
+}
+
+.hero-section__settle-chevrons .hero-section__scroll-chevron:last-child {
+  width: 14px;
+  height: 14px;
+  opacity: 0.45;
+  margin-top: -8px;
+  animation-delay: 0.35s;
+}
+
+@keyframes settleBob {
+  0%, 100% { transform: translateY(0); opacity: 0.8; }
+  50%      { transform: translateY(4px); opacity: 0.5; }
+}
+
+/* ── ENTER sequence: reduced-motion stills ── */
+@media (prefers-reduced-motion: reduce) {
+  .hero-section__enter--dispersing,
+  .hero-section__enter--dispersing .hero-section__enter-letter,
+  .hero-section__shockwave,
+  .hero-section__enter-flash,
+  .hero-section__trails,
+  .hero-section__trail,
+  .hero-section__gold-dust,
+  .hero-section__gold-dot,
+  .hero-section__enter--enchanted,
+  .hero-section__enter-orbit,
+  .hero-section__enter-orbit-star,
+  .hero-section__enter--inhale,
+  .hero-section__post-item,
+  .hero-section__settle-cue,
+  .hero-section__settle-chevrons .hero-section__scroll-chevron {
+    animation: none;
+  }
+
+  .hero-section__enter-orbit,
+  .hero-section__gold-dust {
+    display: none;
+  }
+
+  .hero-section__enter--enchanted {
+    box-shadow:
+      0 2px 4px rgba(0, 0, 0, 0.06),
+      0 4px 12px rgba(200, 164, 107, 0.15);
+  }
+
+  .hero-section__aperture--bloom {
+    filter: none;
+  }
+}
+
+/* ════════════════════════════════════════════════════════════
+   SHARED-LIGHT CONTINUITY — constellation ignites from the gate's last glow
+   Full-viewport gold radial pulse: the seal farewell's final frame, re-ignited
+   on the hero side (mount cascade + live 'ibhi:unsealed' bridge). Gold sole
+   accent: warm-white core melting into faint gold. transform/opacity only.
+   ════════════════════════════════════════════════════════════ */
+
+.hero-section__shared-glow {
+  position: absolute;
+  inset: 0;
+  z-index: 19;
+  pointer-events: none;
+  background: radial-gradient(
+    circle at 50% 50%,
+    #FFFDF7 0%,
+    rgba(224, 201, 154, 0.5) 22%,
+    rgba(200, 164, 107, 0.22) 42%,
+    transparent 65%
+  );
+  opacity: 0;
+  animation: sharedGlowIgnite 1.4s ease-out both;
+}
+
+@keyframes sharedGlowIgnite {
+  0%   { opacity: 0; transform: scale(0.92); }
+  25%  { opacity: 0.9; transform: scale(1); }
+  100% { opacity: 0; transform: scale(1.06); }
+}
+
+/* ════════════════════════════════════════════════════════════
+   KINETIC HEADLINE — per-letter blur(8px)→0 + y 24→0, 45ms stagger,
+   then ONE gold shimmer sweep across the finished line (then unmounted).
+   transform/opacity/filter only. Screen-reader text kept in an sr-only span.
+   ════════════════════════════════════════════════════════════ */
+
+.hero-section__kinetic-word {
+  position: relative;
+  display: inline-block;
+}
+
+.hero-section__kinetic-letter {
+  will-change: transform, opacity, filter;
+}
+
+.hero-section__kinetic-a11y {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
+
+.hero-section__kinetic-shine {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  white-space: nowrap;
+  background: linear-gradient(
+    100deg,
+    rgba(200, 164, 107, 0) 30%,
+    #F5EDD6 46%,
+    #FFFDF7 50%,
+    #F5EDD6 54%,
+    rgba(200, 164, 107, 0) 70%
+  );
+  background-size: 250% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  -webkit-text-fill-color: transparent;
+  animation: kineticShine 0.9s ease-out forwards;
+}
+
+@keyframes kineticShine {
+  from { background-position: 200% 0; }
+  to   { background-position: -200% 0; }
+}
+
+/* ════════════════════════════════════════════════════════════
+   PHOTO WARMTH — aperture reveal develops: 2500ms scale 1.06→1.0 +
+   sepia 0.3→0 ramp, then the slow drift continues. transform/filter only
+   (filter is compositor-safe per motion law). Overrides the base cinematic
+   zoom (later in file, equal specificity) only while the aperture is open.
+   ════════════════════════════════════════════════════════════ */
+
+.hero-section__bg--develop {
+  animation:
+    developWarm 2.5s cubic-bezier(0.22, 1, 0.36, 1) both,
+    slowZoom 12s ease-out 2.5s forwards;
+}
+
+@keyframes developWarm {
+  from { transform: scale(1.06); filter: sepia(0.3) saturate(1.06); }
+  to   { transform: scale(1.0); filter: sepia(0) saturate(1); }
+}
+
+/* ════════════════════════════════════════════════════════════
+   ELEVATION — reduced-motion stills (instant everywhere, loops gated off)
+   ════════════════════════════════════════════════════════════ */
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-section__shared-glow,
+  .hero-section__kinetic-shine {
+    display: none;
+  }
+
+  .hero-section__bg--develop {
+    animation: none;
+  }
+
+  .hero-section__kinetic-letter {
+    will-change: auto;
+  }
+}
+
+/* Compact portrait contract lives in COMPACT MODE above
+   (ratio-locked 3:4 box = zero crop, centered position).
+   Only the structural picture rule stays here. */
+.hero-section__aperture picture {
+  display: contents;
+}
+
+/* Compact eyebrow: never wrap, never clip at the container edge */
+.hero-section--compact .hero-section__pre-title {
+  flex-wrap: nowrap;
+  max-width: 100%;
+}
+
+@media (max-width: 640px) {
+  .hero-section__pre-title {
+    flex-wrap: nowrap;
+    gap: 0.28em;
+    max-width: 100%;
+  }
+
+  .hero-section__word {
+    letter-spacing: 0.12em;
+  }
+
+  .hero-section--compact .hero-section__word {
+    letter-spacing: 0.1em;
+  }
+}
+
+@media (max-width: 380px) {
+  .hero-section__pre-title {
+    flex-direction: row;
+    flex-wrap: nowrap;
+    align-items: baseline;
+    gap: 0.22em;
+    max-width: 100%;
+    padding-right: 0.5rem;
+  }
+
+  .hero-section__word {
+    font-size: 0.68rem;
+    letter-spacing: 0.08em;
+  }
+
+  .hero-section--compact .hero-section__word {
+    font-size: 0.55rem;
+    letter-spacing: 0.08em;
   }
 }
