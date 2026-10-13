@@ -483,15 +483,9 @@ export default function CandleWish() {
         )}
 
         <p className="cw__status" aria-live="polite">
-          {lit && 'Five candles burn on the cake. Tap the cake to blow them out.'}
           {sealed && 'The wish is sealed. ✓'}
         </p>
 
-        {lit && (
-          <button type="button" className="cw__blow" onClick={blowOut} aria-label="Blow out the candles">
-            Tap to blow out
-          </button>
-        )}
 
         {sealed && (
           <button type="button" className="cw__relight" onClick={relight}>

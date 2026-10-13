@@ -54,13 +54,13 @@ function FrameImage({
   );
 }
 
-/* ─── Frame metadata (warm dedications; `key` preserves mobile styling hooks) ─ */
+/* ─── Frame metadata (warm dedications; `tone` preserves mobile styling hooks) ─ */
 const FRAMES = [
-  { key: 'cinematic', num: '01', title: 'Light, kept for Ibhi', subtitle: 'First of five' },
-  { key: 'editorial', num: '02', title: 'Held gently for Ibhi', subtitle: 'Second of five' },
-  { key: 'develop', num: '03', title: 'Warmth held in light', subtitle: 'Third of five' },
-  { key: 'film', num: '04', title: 'Quiet light for Ibhi', subtitle: 'Fourth of five' },
-  { key: 'widescreen', num: '05', title: 'Light that stays shining', subtitle: 'Last of five' },
+  { tone: 'cinematic', num: '01', title: 'Light, kept for Ibhi', subtitle: 'First of five' },
+  { tone: 'editorial', num: '02', title: 'Held gently for Ibhi', subtitle: 'Second of five' },
+  { tone: 'develop', num: '03', title: 'Warmth held in light', subtitle: 'Third of five' },
+  { tone: 'film', num: '04', title: 'Quiet light for Ibhi', subtitle: 'Fourth of five' },
+  { tone: 'widescreen', num: '05', title: 'Light that stays shining', subtitle: 'Last of five' },
 ];
 
 /* ─── Frame caption ──────────────────────────────── */
@@ -467,7 +467,7 @@ export default function FiveFrames() {
             <button
               key={i}
               type="button"
-              className={`five-frame-mobile five-frame-mobile--${frame.key}`}
+              className={`five-frame-mobile five-frame-mobile--${frame.tone}`}
               onClick={() => handlePhotoClick(i)}
               aria-label={`Open ${frame.title} photo: ${frame.num} ${frame.title} ${frame.subtitle}`}
             >

@@ -44,7 +44,7 @@ export default function NineteenPortal() {
 
   // Compositor-friendly scale instead of font-size (which forced layout
   // recalculation on every scroll frame).
-  const charScale = useTransform(scrollYProgress, [0, 0.3, 0.5], [0.25, 0.5, 1]);
+  const charScale = useTransform(scrollYProgress, [0, 0.22, 0.4], [0.25, 0.5, 1]);
   const split = useTransform(scrollYProgress, [0.5, 0.7], [0, 1]);
   const leftX = useTransform(split, [0, 1], ['0%', '-42%']);
   const rightX = useTransform(split, [0, 1], ['0%', '42%']);
@@ -52,9 +52,9 @@ export default function NineteenPortal() {
   const rightOpacity = useTransform(split, [0, 0.5], [1, 0]);
 
   // Tail: closing line + watermark fill the empty back half of the scroll.
-  const tailOpacity = useTransform(scrollYProgress, [0.6, 0.76], [0, 1]);
-  const tailY = useTransform(scrollYProgress, [0.6, 0.76], [24, 0]);
-  const watermarkOpacity = useTransform(scrollYProgress, [0.58, 0.85], [0, 0.12]);
+  const tailOpacity = useTransform(scrollYProgress, [0.42, 0.58], [0, 1]);
+  const tailY = useTransform(scrollYProgress, [0.42, 0.58], [24, 0]);
+  const watermarkOpacity = useTransform(scrollYProgress, [0.45, 0.7], [0, 0.12]);
 
   return (
     <section className="nineteen-portal" ref={sectionRef} aria-label="19 transition">

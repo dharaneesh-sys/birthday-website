@@ -377,6 +377,10 @@ export default function HeroSection() {
         setShowSubtitle(true);
         setButtonPhase('text');
       }, 200),
+      window.setTimeout(() => {
+        setShowRibbon(false);
+        setShowRibbonTip(false);
+      }, 1100),
     );
   }, []);
 
@@ -446,6 +450,7 @@ export default function HeroSection() {
       s(T.SPARKLE_5, () => setSparkleVisible(p => { const n = [...p]; n[4] = true; return n; })),
       s(T.SPARKLE_1 + 1400, () => setShowSharedGlow(false)),
       s(T.RIBBON, () => { setShowRibbon(true); setShowRibbonTip(true); }),
+      s(T.RIBBON + 1000, () => { setShowRibbon(false); setShowRibbonTip(false); }),
       s(T.LIGHT_LEAK, () => setShowLightLeak(true)),
       s(T.APERTURE, () => { setApertureOpen(true); setShowBlack(false); }),
       s(T.DUST, () => setShowDust(true)),
@@ -795,8 +800,8 @@ export default function HeroSection() {
           <motion.div
             className="hero-section__ribbon"
             initial={{ scaleX: 0, opacity: 0 }}
-            animate={{ scaleX: 1, opacity: 1 }}
-            transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
+            animate={{ scaleX: 1, opacity: [0, 1, 1, 0] }}
+            transition={{ duration: 1, times: [0, 0.25, 0.7, 1], ease: 'easeInOut' }}
           />
           {showRibbonTip && (
             <motion.div
