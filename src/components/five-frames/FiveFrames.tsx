@@ -197,12 +197,12 @@ function FrameEditorial({
       >
         <motion.div className="five-frame__spread-page five-frame__spread-page--left" style={{ x: leftX }}>
           <div className="five-frame__spread-img-wrap">
-            <FrameImage photo={photo} sizes="50vw" className="five-frame__img five-frame__img--spread" style={{ objectPosition: '20% 50%' }} draggable={false} />
+            <FrameImage photo={photo} sizes="50vw" className="five-frame__img five-frame__img--spread" draggable={false} />
           </div>
         </motion.div>
         <motion.div className="five-frame__spread-page five-frame__spread-page--right" style={{ x: rightX }}>
           <div className="five-frame__spread-img-wrap">
-            <FrameImage photo={photo} sizes="50vw" className="five-frame__img five-frame__img--spread" style={{ objectPosition: '80% 50%' }} draggable={false} />
+            <FrameImage photo={photo} sizes="50vw" className="five-frame__img five-frame__img--spread" draggable={false} />
           </div>
         </motion.div>
         <motion.div className="five-frame__spread-shadow" style={{ opacity: shadowOpacity }} />
