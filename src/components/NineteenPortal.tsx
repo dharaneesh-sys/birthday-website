@@ -3,25 +3,29 @@ import { motion, useScroll, useTransform, useInView } from 'framer-motion';
 import './NineteenPortal.css';
 
 /* ─── Orbiting particles ─────────────────────────────── */
+/* Module-scope particle config — generated once, never during render. */
+const PARTICLES = Array.from({ length: 10 }, (_, i) => ({
+  angle: (i / 10) * 360,
+  radius: 60 + Math.random() * 40,
+  duration: 8 + Math.random() * 4,
+  delay: Math.random() * 2,
+}));
+
 function OrbitingParticles() {
   return (
     <div className="portal-particles" aria-hidden="true">
-      {Array.from({ length: 10 }).map((_, i) => {
-        const angle = (i / 10) * 360;
-        const radius = 60 + Math.random() * 40;
-        return (
-          <div
-            key={i}
-            className="portal-particle"
-            style={{
-              animation: `portalOrbit ${8 + Math.random() * 4}s linear infinite`,
-              animationDelay: `${Math.random() * 2}s`,
-              '--angle': `${angle}deg`,
-              '--radius': `${radius}px`,
-            } as React.CSSProperties}
-          />
-        );
-      })}
+      {PARTICLES.map((p, i) => (
+        <div
+          key={i}
+          className="portal-particle"
+          style={{
+            animation: `portalOrbit ${p.duration}s linear infinite`,
+            animationDelay: `${p.delay}s`,
+            '--angle': `${p.angle}deg`,
+            '--radius': `${p.radius}px`,
+          } as React.CSSProperties}
+        />
+      ))}
     </div>
   );
 }
@@ -91,7 +95,7 @@ export default function NineteenPortal() {
             className="nineteen-portal__tail"
             style={{ opacity: tailOpacity, y: tailY }}
           >
-            nineteen, and the story continues. Happy birthday to you.
+            nineteen, and the story continues.
           </motion.p>
 
           {/* Orbiting gold particles */}

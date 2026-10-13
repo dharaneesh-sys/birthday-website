@@ -1,6 +1,5 @@
 import { useState, useRef, useCallback, useEffect } from 'react';
 import { motion, useInView, type Variants } from 'framer-motion';
-import ConfettiBurst from './magic/ConfettiBurst';
 import './Playground.css';
 
 /* ─── Photo files ────────────────────────────────────── */
@@ -59,21 +58,6 @@ const cardVariants: Variants[] = [
       x: 0,
       skewY: 0,
       transition: { duration: 0.55, ease: [0.22, 1, 0.36, 1], delay: 0.2 },
-    },
-  },
-  /* Card 3: scales up from small */
-  {
-    hidden: { opacity: 0, scale: 0.85 },
-    visible: {
-      opacity: 1,
-      scale: 1,
-      transition: {
-        type: 'spring' as const,
-        stiffness: 120,
-        damping: 12,
-        mass: 0.8,
-        delay: 0.35,
-      },
     },
   },
 ];
@@ -200,7 +184,7 @@ function ScratchCard({ onReveal, onReset }: { onReveal: () => void; onReset?: ()
       <div className="scratch-card__wrapper">
         <div className="scratch-card__message">
           <span className="scratch-card__msg-line">Happy 19th!</span>
-          <span className="scratch-card__msg-sub">Here's to nineteen, Ibhi.</span>
+          <span className="scratch-card__msg-sub">Here&apos;s to nineteen, Ibhi.</span>
         </div>
         <canvas
           ref={canvasRef}
@@ -305,27 +289,6 @@ function PhotoDeveloper({ onDevelop }: { onDevelop: (photoSrc: string) => void }
   );
 }
 
-/* ─── Confetti Button ────────────────────────────────── */
-function ConfettiButton() {
-  const [burst, setBurst] = useState<{ key: number } | null>(null);
-
-  const fire = () => {
-    setBurst({ key: Date.now() });
-    setTimeout(() => setBurst(null), 3000);
-  };
-
-  return (
-    <div className="playground-card confetti-button-card">
-      <div className="confetti-button-card__stack">
-        <h3 className="playground-card__title">Celebration</h3>
-        <button type="button" className="playground-card__btn playground-card__btn--gold" onClick={fire}>
-          MAKE IT RAIN
-        </button>
-      </div>
-      {burst && <ConfettiBurst key={burst.key} level="small" />}
-    </div>
-  );
-}
 
 /* ─── Main Playground Section ────────────────────────── */
 export default function Playground() {
@@ -391,13 +354,6 @@ export default function Playground() {
             animate={isInView ? 'visible' : 'hidden'}
           >
             <PhotoDeveloper onDevelop={handlePhotoDevelop} />
-          </motion.div>
-          <motion.div
-            variants={cardVariants[2]}
-            initial="hidden"
-            animate={isInView ? 'visible' : 'hidden'}
-          >
-            <ConfettiButton />
           </motion.div>
         </div>
       </div>

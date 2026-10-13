@@ -26,9 +26,9 @@ function App() {
 
       <SealedEntry />
       <HeroSection />
-      <MemoriesSection />
       <NineteenPortal />
       <HappyBirthday />
+      <MemoriesSection />
       <CandleWish />
       <MusicPlayer />
       <Playground />

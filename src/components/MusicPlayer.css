@@ -485,6 +485,7 @@
   letter-spacing: 0.08em;
   margin-top: 0.15rem;
   min-height: 1.1em;
+  font-variant-numeric: tabular-nums;
   transition: opacity 0.2s ease;
 }
 
@@ -545,6 +546,7 @@
   font-family: 'Inter', system-ui, sans-serif;
   font-size: 0.65rem;
   color: var(--text-light, #8A7E6E);
+  font-variant-numeric: tabular-nums;
   letter-spacing: 0.03em;
 }
 
