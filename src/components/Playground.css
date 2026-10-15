@@ -682,6 +682,141 @@ button.photo-developer__card {
 }
 
 /* ════════════════════════════════════════════════════════════
+   TEDDY BEAR — Bear Hug card
+   ════════════════════════════════════════════════════════════ */
+
+.teddy-card .playground-card__title {
+  letter-spacing: 0.04em;
+}
+
+/* Speech bubble */
+.teddy__bubble-zone {
+  min-height: 3.4em;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+}
+
+.teddy__bubble {
+  position: relative;
+  background: #FFFDF7;
+  border: 1px solid rgba(196, 136, 106, 0.4);
+  border-radius: 14px;
+  padding: 0.45rem 1rem 0.5rem;
+  box-shadow: 0 2px 8px rgba(46, 38, 32, 0.08);
+  text-align: center;
+  will-change: transform, opacity;
+}
+
+.teddy__bubble::after {
+  content: '';
+  position: absolute;
+  left: 50%;
+  bottom: -5px;
+  width: 10px;
+  height: 10px;
+  background: #FFFDF7;
+  border-right: 1px solid rgba(196, 136, 106, 0.4);
+  border-bottom: 1px solid rgba(196, 136, 106, 0.4);
+  transform: translateX(-50%) rotate(45deg);
+}
+
+.teddy__bubble-hint {
+  font-family: 'Caveat', cursive;
+  font-size: 1.05rem;
+  color: var(--text-light, #8A7468);
+}
+
+.teddy__bubble-eyebrow {
+  display: block;
+  font-family: 'Inter', system-ui, sans-serif;
+  font-size: 0.6rem;
+  font-weight: 500;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--gold-dark, #A8673E);
+}
+
+.teddy__bubble-word {
+  display: block;
+  font-family: 'Caveat', cursive;
+  font-size: 1.7rem;
+  font-weight: 700;
+  line-height: 1.1;
+  color: var(--text, #2E2620);
+}
+
+/* The bear button */
+.teddy {
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  position: relative;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.teddy:focus-visible {
+  outline: 2px solid var(--gold-light, #EDCFB3);
+  outline-offset: 4px;
+  border-radius: 12px;
+}
+
+.teddy__svg {
+  display: block;
+  width: min(168px, 100%);
+  height: auto;
+  margin: 0 auto;
+  overflow: visible;
+  filter: drop-shadow(0 6px 14px rgba(168, 103, 62, 0.18));
+}
+
+/* Happy-face swap + blush while hugging */
+.teddy__eyes-happy,
+.teddy__blush {
+  opacity: 0;
+  transition: opacity 0.25s ease;
+}
+
+.teddy__eyes-open {
+  opacity: 1;
+  transition: opacity 0.25s ease;
+}
+
+.teddy--hugging .teddy__eyes-happy,
+.teddy--hugging .teddy__blush {
+  opacity: 0.85;
+}
+
+.teddy--hugging .teddy__eyes-open {
+  opacity: 0;
+}
+
+/* Arms lift happily while hugging */
+.teddy__arm {
+  transform-box: fill-box;
+  transform-origin: 50% 12%;
+  transition: transform 0.3s var(--ease-spring, cubic-bezier(0.34, 1.56, 0.64, 1));
+}
+
+.teddy__arm--l {
+  transform: rotate(-10deg);
+}
+
+.teddy__arm--r {
+  transform: rotate(10deg);
+}
+
+.teddy--hugging .teddy__arm--l {
+  transform: rotate(-28deg);
+}
+
+.teddy--hugging .teddy__arm--r {
+  transform: rotate(28deg);
+}
+
+
+/* ════════════════════════════════════════════════════════════
    REDUCED MOTION
    ════════════════════════════════════════════════════════════ */
 
@@ -701,7 +836,11 @@ button.photo-developer__card {
     transform: none !important;
   }
 
-  .confetti-button-card .playground-card__btn:hover {
-    transform: none !important;
+  .teddy__bubble {
+    animation: none !important;
+  }
+
+  .teddy__arm {
+    transition: none !important;
   }
 }
