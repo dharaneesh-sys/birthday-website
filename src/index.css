@@ -1,4 +1,5 @@
-@import "tailwindcss";
+/* Tailwind preflight only (reset). No utilities/theme used — all styling is custom CSS. */
+@import "tailwindcss/preflight.css";
 
 /* === Rose Gold Candlelight Design Tokens === */
 :root {
