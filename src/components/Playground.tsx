@@ -308,13 +308,14 @@ function PhotoDeveloper({ onDevelop }: { onDevelop: (photoSrc: string) => void }
 
 /* ─── Teddy Bear (Bear Hug) ──────────────────────────── */
 const TEDDY_WORDS = [
-  'cute', 'sweet', 'beautiful', 'gorgeous',
-  'radiant', 'lovely', 'kind-hearted', 'sunshine',
+  'thoughtful', 'sunshine', 'kind-hearted', 'brilliant',
+  'radiant', 'genuine', 'sweet', 'irreplaceable',
 ];
 
 function TeddyBear({ onHug }: { onHug: (word: string) => void }) {
   const [hugs, setHugs] = useState(0);
   const [hugging, setHugging] = useState(false);
+  const [squishKey, setSquishKey] = useState(0);
   const [kept, setKept] = useState(false);
   const hugTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const [reducedMotion] = useState(
@@ -334,6 +335,7 @@ function TeddyBear({ onHug }: { onHug: (word: string) => void }) {
     setHugs((h) => h + 1);
     setKept(true);
     if (reducedMotion) return;
+    setSquishKey((k) => k + 1);
     setHugging(true);
     if (hugTimer.current) window.clearTimeout(hugTimer.current);
     hugTimer.current = window.setTimeout(() => setHugging(false), 650);
@@ -377,97 +379,108 @@ function TeddyBear({ onHug }: { onHug: (word: string) => void }) {
         aria-label="Hug the teddy bear"
         data-cursor-label="HUG"
       >
-        <svg className="teddy__svg" viewBox="0 0 200 230" role="img" aria-label="A caramel teddy bear with a gold bow">
-          <defs>
-            <radialGradient id="tedFur" cx="42%" cy="32%" r="75%">
-              <stop offset="0%" stopColor="#F0C795" />
-              <stop offset="55%" stopColor="#D9A679" />
-              <stop offset="100%" stopColor="#B97843" />
-            </radialGradient>
-            <linearGradient id="tedLimb" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0%" stopColor="#D09A5E" />
-              <stop offset="100%" stopColor="#A96F38" />
-            </linearGradient>
-            <radialGradient id="tedCream" cx="45%" cy="36%" r="78%">
-              <stop offset="0%" stopColor="#FFFBF3" />
-              <stop offset="100%" stopColor="#F3DFC4" />
-            </radialGradient>
-            <radialGradient id="tedEar" cx="45%" cy="40%" r="70%">
-              <stop offset="0%" stopColor="#F4B9C4" />
-              <stop offset="100%" stopColor="#D47F91" />
-            </radialGradient>
-            <g id="tedPaw">
-              <path d="M75 138 C63 141 55 152 54 166 C53 179 57 188 65 189 C73 190 78 183 78 171 C78 160 79 147 75 138 Z" fill="url(#tedFur)" stroke="#9C6633" strokeWidth="1.5" strokeOpacity="0.45" />
-              <path d="M72 144 C64 148 60 158 60 170" fill="none" stroke="#8A5A30" strokeWidth="1.4" opacity="0.35" strokeLinecap="round" />
-              <ellipse cx="65" cy="177" rx="6" ry="7.5" fill="url(#tedCream)" />
-              <path d="M62.5 172 L62.5 178 M67.5 172 L67.5 178" stroke="#C4886A" strokeWidth="1.2" opacity="0.8" strokeLinecap="round" />
+        <span className="teddy__art">
+          <svg className="teddy__svg-art" viewBox="0 0 760 920" role="img" aria-label="A soft grey teddy bear wearing a teal scarf">
+            <defs>
+              <linearGradient id="tedFur" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stopColor="#D8C9B6" />
+                <stop offset="60%" stopColor="#C9BAAA" />
+                <stop offset="100%" stopColor="#A68F7B" />
+              </linearGradient>
+              <radialGradient id="tedCream" cx="45%" cy="36%" r="78%">
+                <stop offset="0%" stopColor="#F7ECDC" />
+                <stop offset="100%" stopColor="#E7D5BC" />
+              </radialGradient>
+              <radialGradient id="tedEarIn" cx="45%" cy="40%" r="70%">
+                <stop offset="0%" stopColor="#EFA48E" />
+                <stop offset="100%" stopColor="#D37F66" />
+              </radialGradient>
+              <linearGradient id="tedScarfG" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stopColor="#8CAEA6" />
+                <stop offset="100%" stopColor="#5F847C" />
+              </linearGradient>
+            </defs>
+
+            <motion.g
+              key={squishKey}
+              initial={squishKey === 0 || reducedMotion ? false : { scaleY: 1 }}
+              animate={reducedMotion ? {} : { scaleY: [1, 0.9, 1.04, 1] }}
+              transition={{ duration: 0.55, ease: 'easeOut' }}
+            >
+            <ellipse cx="380" cy="884" rx="285" ry="30" fill="#D8CFC2" />
+
+            <g id="body">
+              <ellipse cx="380" cy="650" rx="238" ry="220" fill="url(#tedFur)" stroke="#8A7565" strokeWidth="3" strokeOpacity="0.45" />
+              <path d="M590 540 Q606 650 590 760 Q600 650 584 544 Z" fill="#6B4E35" opacity="0.14" />
+              <path d="M170 540 Q154 650 170 760 Q160 650 176 544 Z" fill="#FFFDF7" opacity="0.12" />
+              <ellipse cx="380" cy="692" rx="128" ry="140" fill="url(#tedCream)" />
+              <path d="M264 730 Q380 780 496 730 Q380 762 264 730 Z" fill="#B57A44" opacity="0.10" />
             </g>
-          </defs>
 
-          <ellipse cx="100" cy="216" rx="46" ry="8" fill="rgba(46,38,32,0.10)" />
+            <g id="leg-left">
+              <ellipse cx="245" cy="822" rx="108" ry="80" fill="url(#tedFur)" stroke="#8A7565" strokeWidth="3" strokeOpacity="0.45" />
+              <ellipse cx="240" cy="834" rx="66" ry="52" fill="url(#tedCream)" />
+            </g>
+            <g id="leg-right">
+              <ellipse cx="515" cy="822" rx="108" ry="80" fill="url(#tedFur)" stroke="#8A7565" strokeWidth="3" strokeOpacity="0.45" />
+              <ellipse cx="520" cy="834" rx="66" ry="52" fill="url(#tedCream)" />
+            </g>
 
-          <circle cx="52" cy="54" r="20" fill="url(#tedFur)" stroke="#9C6633" strokeWidth="1.5" strokeOpacity="0.5" />
-          <circle cx="148" cy="54" r="20" fill="url(#tedFur)" stroke="#9C6633" strokeWidth="1.5" strokeOpacity="0.5" />
-          <circle cx="52" cy="54" r="10" fill="url(#tedEar)" stroke="#B95F72" strokeWidth="1" strokeOpacity="0.45" />
-          <circle cx="148" cy="54" r="10" fill="url(#tedEar)" stroke="#B95F72" strokeWidth="1" strokeOpacity="0.45" />
+            <g id="arm-left" className="teddy__arm teddy__arm--l">
+              <ellipse cx="165" cy="640" rx="70" ry="148" fill="url(#tedFur)" stroke="#8A7565" strokeWidth="3" strokeOpacity="0.45" transform="rotate(14 165 640)" />
+              <path d="M120 560 Q112 640 120 720" fill="none" stroke="#8A5A30" strokeWidth="4" opacity="0.3" strokeLinecap="round" />
+              <ellipse cx="152" cy="736" rx="32" ry="40" fill="url(#tedCream)" opacity="0.95" />
+            </g>
+            <g id="arm-right" className="teddy__arm teddy__arm--r">
+              <ellipse cx="595" cy="640" rx="70" ry="148" fill="url(#tedFur)" stroke="#8A7565" strokeWidth="3" strokeOpacity="0.45" transform="rotate(-14 595 640)" />
+              <path d="M640 560 Q648 640 640 720" fill="none" stroke="#8A5A30" strokeWidth="4" opacity="0.3" strokeLinecap="round" />
+              <ellipse cx="608" cy="736" rx="32" ry="40" fill="url(#tedCream)" opacity="0.95" />
+            </g>
 
-          <ellipse cx="100" cy="168" rx="40" ry="38" fill="url(#tedFur)" stroke="#9C6633" strokeWidth="1.5" strokeOpacity="0.45" />
-          <path d="M64 150 Q60 168 66 188 Q62 168 60 152 Z" fill="#FFFDF7" opacity="0.12" />
-          <path d="M136 150 Q140 168 134 188 Q138 168 140 152 Z" fill="#5A3214" opacity="0.16" />
-          <ellipse cx="100" cy="172" rx="22" ry="24" fill="url(#tedCream)" />
-          <path d="M80 184 Q100 196 120 184 Q100 190 80 184 Z" fill="#B57A44" opacity="0.12" />
+            <g id="scarf">
+              <path d="M 200 470 Q 380 550 560 470 Q 576 505 566 528 Q 380 610 194 528 Q 184 505 200 470 Z" fill="url(#tedScarfG)" stroke="#42605B" strokeWidth="3" strokeOpacity="0.55" />
+              <path d="M 230 492 Q 380 560 530 492" fill="none" stroke="rgba(255,255,255,0.25)" strokeWidth="7" strokeLinecap="round" />
+              <path d="M 348 566 Q 380 586 412 566 L 420 700 Q 380 720 340 700 Z" fill="url(#tedScarfG)" stroke="#42605B" strokeWidth="3" strokeOpacity="0.55" />
+              <path d="M 362 578 L 366 690 M 398 578 L 394 690" stroke="#42605B" strokeWidth="7" strokeLinecap="round" fill="none" opacity="0.45" />
+              <path d="M 355 706 v 24 M 380 712 v 24 M 405 706 v 24" stroke="#42605B" strokeWidth="10" strokeLinecap="round" fill="none" />
+              <circle cx="380" cy="545" r="40" fill="url(#tedScarfG)" stroke="#42605B" strokeWidth="3" strokeOpacity="0.55" />
+              <ellipse cx="380" cy="558" rx="30" ry="14" fill="#33473F" opacity="0.35" />
+              <path d="M 250 505 q 12 16 8 30 M 300 522 q 10 16 6 30 M 460 522 q -10 16 -6 30 M 510 505 q -12 16 -8 30" stroke="#33473F" strokeWidth="6" strokeLinecap="round" fill="none" opacity="0.35" />
+            </g>
 
-          <g className="teddy__arm teddy__arm--l">
-            <use href="#tedPaw" />
-          </g>
-          <g className="teddy__arm teddy__arm--r">
-            <use href="#tedPaw" transform="matrix(-1,0,0,1,200,0)" />
-          </g>
-          <ellipse cx="84" cy="150" rx="7" ry="12" fill="#5A3214" opacity="0.10" />
-          <ellipse cx="116" cy="150" rx="7" ry="12" fill="#5A3214" opacity="0.10" />
-
-          <ellipse cx="70" cy="204" rx="17" ry="12" fill="url(#tedLimb)" stroke="#9C6633" strokeWidth="1.5" strokeOpacity="0.45" />
-          <ellipse cx="130" cy="204" rx="17" ry="12" fill="url(#tedLimb)" stroke="#9C6633" strokeWidth="1.5" strokeOpacity="0.45" />
-          <path d="M55 206 Q70 212 85 206 Q70 209 55 206 Z" fill="#5A3214" opacity="0.12" />
-          <path d="M115 206 Q130 212 145 206 Q130 209 115 206 Z" fill="#5A3214" opacity="0.12" />
-          <ellipse cx="70" cy="205" rx="8.5" ry="6" fill="url(#tedCream)" />
-          <ellipse cx="130" cy="205" rx="8.5" ry="6" fill="url(#tedCream)" />
-
-          <ellipse cx="100" cy="88" rx="46" ry="42" fill="url(#tedFur)" stroke="#9C6633" strokeWidth="1.5" strokeOpacity="0.45" />
-          <path d="M134 62 Q144 86 136 112 Q142 86 132 64 Z" fill="#5A3214" opacity="0.15" />
-          <ellipse cx="76" cy="60" rx="15" ry="8" fill="#FFFDF7" opacity="0.16" transform="rotate(-18 76 60)" />
-          <ellipse cx="100" cy="126" rx="20" ry="6" fill="#5A3214" opacity="0.10" />
-          <g stroke="#A96F38" strokeWidth="1.6" strokeLinecap="round" opacity="0.55">
-            <path d="M60 78 L55 82 M60 88 L55 90" />
-            <path d="M140 78 L145 82 M140 88 L145 90" />
-          </g>
-
-          <ellipse cx="100" cy="106" rx="23" ry="16.5" fill="url(#tedCream)" />
-          <g className="teddy__eyes-open">
-            <path d="M75 73 Q83 67 91 73" fill="none" stroke="#8A5A33" strokeWidth="2" strokeLinecap="round" />
-            <path d="M109 73 Q117 67 125 73" fill="none" stroke="#8A5A33" strokeWidth="2" strokeLinecap="round" />
-            <circle cx="83" cy="81" r="5" fill="#4A2E18" />
-            <circle cx="117" cy="81" r="5" fill="#4A2E18" />
-            <circle cx="84.8" cy="79.2" r="1.7" fill="#FFFDF7" />
-            <circle cx="118.8" cy="79.2" r="1.7" fill="#FFFDF7" />
-          </g>
-          <g className="teddy__eyes-happy" fill="none" stroke="#4A2E18" strokeWidth="3" strokeLinecap="round">
-            <path d="M75 81 Q83 73 91 81" />
-            <path d="M109 81 Q117 73 125 81" />
-          </g>
-          <ellipse className="teddy__blush" cx="69" cy="96" rx="7.5" ry="4.5" fill="#E8A2B0" />
-          <ellipse className="teddy__blush" cx="131" cy="96" rx="7.5" ry="4.5" fill="#E8A2B0" />
-          <ellipse cx="100" cy="99" rx="6.5" ry="4.5" fill="#4A2E18" />
-          <path d="M100 103.5 Q100 109 92 109 M100 103.5 Q100 109 108 109" fill="none" stroke="#4A2E18" strokeWidth="2" strokeLinecap="round" />
-
-          <g>
-            <path d="M100 134 C90 126 80 124 78 131 C76 138 86 142 100 136 Z" fill="#FFFDF7" stroke="#C9B8AB" strokeWidth="1.25" />
-            <path d="M100 134 C110 126 120 124 122 131 C124 138 114 142 100 136 Z" fill="#FFFDF7" stroke="#C9B8AB" strokeWidth="1.25" />
-            <path d="M84 130 Q92 127 98 131 M102 131 Q108 127 116 130" fill="none" stroke="#E4D6C2" strokeWidth="1.2" strokeLinecap="round" />
-            <circle cx="100" cy="134" r="6" fill="#E0788F" stroke="#C05A74" strokeWidth="1.25" />
-            <circle cx="98" cy="132" r="1.6" fill="#FFFDF7" opacity="0.85" />
-          </g>
+            <g id="head" className="teddy__head">
+              <g id="ear-left">
+                <circle cx="100" cy="134" r="92" fill="url(#tedFur)" stroke="#8A7565" strokeWidth="3" strokeOpacity="0.45" />
+                <circle cx="106" cy="140" r="50" fill="url(#tedEarIn)" />
+              </g>
+              <g id="ear-right">
+                <circle cx="660" cy="134" r="92" fill="url(#tedFur)" stroke="#8A7565" strokeWidth="3" strokeOpacity="0.45" />
+                <circle cx="654" cy="140" r="50" fill="url(#tedEarIn)" />
+              </g>
+              <ellipse cx="380" cy="300" rx="258" ry="212" fill="url(#tedFur)" stroke="#8A7565" strokeWidth="3" strokeOpacity="0.45" />
+              <path d="M610 190 Q632 300 610 410 Q622 300 604 196 Z" fill="#6B4E35" opacity="0.14" />
+              <ellipse cx="280" cy="180" rx="70" ry="38" fill="#FFFDF7" opacity="0.14" transform="rotate(-16 280 180)" />
+              <ellipse cx="380" cy="500" rx="120" ry="26" fill="#6B4E35" opacity="0.10" />
+              <ellipse id="muzzle" cx="380" cy="392" rx="104" ry="76" fill="url(#tedCream)" />
+              <path id="nose" d="M 348 356 Q 380 336 412 356 Q 407 392 380 400 Q 353 392 348 356 Z" fill="#38281E" />
+              <ellipse cx="370" cy="362" rx="8" ry="5" fill="#FFFDF7" opacity="0.85" />
+              <path id="mouth" d="M 380 400 L 380 414 M 380 414 Q 372 434 348 428 M 380 414 Q 388 434 412 428" stroke="#38281e" strokeWidth="7" strokeLinecap="round" fill="none" />
+              <g id="eye-left">
+                <circle cx="287" cy="312" r="25" fill="#38281E" />
+                <circle cx="295" cy="304" r="7" fill="#ffffff" opacity="0.9" />
+              </g>
+              <g id="eye-right">
+                <circle cx="473" cy="312" r="25" fill="#38281E" />
+                <circle cx="481" cy="304" r="7" fill="#ffffff" opacity="0.9" />
+              </g>
+              <path id="brow-left" d="M 246 246 Q 282 226 318 240" stroke="#38281e" strokeWidth="7" strokeLinecap="round" fill="none" />
+              <path id="brow-right" d="M 442 240 Q 478 226 514 246" stroke="#38281e" strokeWidth="7" strokeLinecap="round" fill="none" />
+            </g>
+            </motion.g>
+          <span className="teddy__blush teddy__blush--l" aria-hidden="true" />
+          <span className="teddy__blush teddy__blush--r" aria-hidden="true" />
         </svg>
+        </span>
       </motion.button>
 
       {kept && (

@@ -114,8 +114,8 @@
   left: 50%;
   width: 40px;
   height: 12px;
-  background: rgba(230, 220, 200, 0.7);
-  border: 1px solid rgba(200, 180, 150, 0.3);
+  background: rgba(220, 200, 190, 0.7);
+  border: 1px solid rgba(196, 132, 122, 0.2);
   border-radius: 1px;
   box-shadow: 0 1px 2px rgba(0,0,0,0.03);
   pointer-events: none;
@@ -303,7 +303,7 @@
   width: 100%;
   text-align: center;
   padding-bottom: 0.5rem;
-  border-bottom: 1px dashed rgba(200, 164, 107, 0.45);
+  border-bottom: 1px dashed rgba(196, 132, 122, 0.4);
 }
 
 /* Scratch actions — one tight centered row with consistent gap */
@@ -700,7 +700,7 @@ button.photo-developer__card {
 .teddy__bubble {
   position: relative;
   background: #FFFDF7;
-  border: 1px solid rgba(196, 136, 106, 0.4);
+  border: 1px solid rgba(196, 132, 122, 0.35);
   border-radius: 14px;
   padding: 0.45rem 1rem 0.5rem;
   box-shadow: 0 2px 8px rgba(46, 38, 32, 0.08);
@@ -762,57 +762,74 @@ button.photo-developer__card {
   border-radius: 12px;
 }
 
-.teddy__svg {
-  display: block;
-  width: min(168px, 100%);
-  height: auto;
+.teddy__art {
+  position: relative;
+  width: min(148px, 88%);
   margin: 0 auto;
+}
+
+.teddy__svg-art {
+  display: block;
+  width: 100%;
+  height: auto;
   overflow: visible;
-  filter: drop-shadow(0 6px 14px rgba(168, 103, 62, 0.18));
+  filter: drop-shadow(0 6px 14px rgba(74, 62, 56, 0.14));
 }
 
-/* Happy-face swap + blush while hugging */
-.teddy__eyes-happy,
-.teddy__blush {
-  opacity: 0;
-  transition: opacity 0.25s ease;
-}
-
-.teddy__eyes-open {
-  opacity: 1;
-  transition: opacity 0.25s ease;
-}
-
-.teddy--hugging .teddy__eyes-happy,
-.teddy--hugging .teddy__blush {
-  opacity: 0.85;
-}
-
-.teddy--hugging .teddy__eyes-open {
-  opacity: 0;
-}
-
-/* Arms lift happily while hugging */
-.teddy__arm {
-  transform-box: fill-box;
-  transform-origin: 50% 12%;
-  transition: transform 0.3s var(--ease-spring, cubic-bezier(0.34, 1.56, 0.64, 1));
+/* Articulated parts — pivots live in view-box space */
+.teddy__arm,
+.teddy__head {
+  transform-box: view-box;
+  transition: transform 0.55s cubic-bezier(0.34, 1.4, 0.64, 1);
 }
 
 .teddy__arm--l {
-  transform: rotate(-10deg);
+  transform-origin: 215px 520px;
 }
 
 .teddy__arm--r {
-  transform: rotate(10deg);
+  transform-origin: 545px 520px;
+}
+
+.teddy__head {
+  transform-origin: 380px 520px;
 }
 
 .teddy--hugging .teddy__arm--l {
-  transform: rotate(-28deg);
+  transform: rotate(-24deg);
 }
 
 .teddy--hugging .teddy__arm--r {
-  transform: rotate(28deg);
+  transform: rotate(24deg);
+}
+
+.teddy--hugging .teddy__head {
+  transform: rotate(2.5deg);
+}
+
+/* Blush overlays that fade in while hugging */
+.teddy__blush {
+  position: absolute;
+  top: 39%;
+  width: 44px;
+  height: 28px;
+  border-radius: 50%;
+  background: radial-gradient(ellipse at center, rgba(232,162,176,0.85) 0%, rgba(232,162,176,0) 70%);
+  opacity: 0;
+  transition: opacity 0.25s ease;
+  pointer-events: none;
+}
+
+.teddy__blush--l {
+  left: 22%;
+}
+
+.teddy__blush--r {
+  right: 22%;
+}
+
+.teddy--hugging .teddy__blush {
+  opacity: 0.9;
 }
 
 
@@ -840,7 +857,4 @@ button.photo-developer__card {
     animation: none !important;
   }
 
-  .teddy__arm {
-    transition: none !important;
-  }
 }
